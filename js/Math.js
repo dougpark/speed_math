@@ -135,7 +135,7 @@ var PMath = new Phaser.Class({
             targets: this.invader,
             x: Povin.placeX(.8),
             y: Povin.placeY(.95),
-            ease: 'Sine.easeInOut',
+            ease: 'Phaser.Math.Easing.Linear',
             yoyo: true,
             repeat: -1,
             duration: option.buzzer
@@ -730,7 +730,9 @@ var PMath = new Phaser.Class({
     // button Go
     actionOnClickGo: function (config) {
         if (config.ctx.buttonGo.inputEnabled) {
-            if (config.ctx.roundComplete) {config.ctx.nextState();}
+            if (config.ctx.roundComplete) {
+                config.ctx.nextState();
+            }
 
             // not complete so go again
             config.ctx.go();
