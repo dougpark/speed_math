@@ -110,6 +110,58 @@ class MenuButton extends Phaser.GameObjects.Container {
     }
 };
 
+class SpeakerButton extends Phaser.GameObjects.Container {
+    constructor(config) {
+        super(config.scene, 0, 0);
+        this.c = config;
+        
+        if (!config) {config = this.c;}
+        //var b2 = scene.add.rectangle(0, 0, 20, 20);
+        var b1 = config.scene.add.line(0, -10, 0, 0, 30, 0);
+        var b2 = config.scene.add.line(0, 0, 0, 30, 0, 0);
+        var b3 = config.scene.add.line(0, 10, 0, 0, 30, 0);
+        b1.setStrokeStyle(1, config.style);
+        b1.myFrame = 0;
+        b3.myFrame = 0;
+        b2.setStrokeStyle(1, config.style);
+        b3.setStrokeStyle(1, config.style);
+
+        this.add([b1, b2, b3]);
+        this.setSize(40, 40);
+        this.setInteractive();
+        b2.visible = false;
+        b2.myFrame = 1;
+        config.scene.add.existing(this);
+
+    }
+
+    showFrame0() {
+        this.getAll('myFrame', 0).forEach(this.show);
+        this.getAll('myFrame', 1).forEach(this.hide);
+    }
+
+    show(item,index) {
+        item.visible = true;
+
+    }
+    hide(item,index) {
+        item.visible = false;
+    }
+
+    showFrame1() {
+        this.getAll('myFrame', 1).forEach(this.show);
+        this.getAll('myFrame', 0).forEach(this.hide);
+    }
+    
+    setFrame (frame) { 
+        if (frame ==0) { 
+            this.showFrame0();   
+        } else {
+            this.showFrame1();
+        }
+    }
+};
+
 var MainMenu = new Phaser.Class({
             Extends: Phaser.Scene,
             initialize: function mainMenu() {
@@ -178,14 +230,17 @@ var MainMenu = new Phaser.Class({
          Povin.place(this.tText, 0.5, 0.07);
 
         // Speaker button to start/stop the background music
-        this.buttonSpeaker = this.add.image(0, 0, 'buttonSpeaker').setInteractive();
+        this.buttonSpeaker = new SpeakerButton({
+            scene: this,
+            style: style.textHeaderH,
+        });
         this.buttonSpeaker.on('pointerdown', function () {
             Povin.actionOnClickSpeaker({
                 target: this,
                 ctx: game.ctx
             });
         });
-        this.buttonSpeaker.setOrigin(0.5, 0.5);
+        //this.buttonSpeaker.setOrigin(0.5, 0.5);
         this.buttonSpeaker.setScale(1, 1);
         Povin.place(this.buttonSpeaker, 0.9, 0.07);
         Povin.setSpeakerTexture(this.buttonSpeaker);
