@@ -7,6 +7,16 @@
 **************************************************************************************/
 "use strict";
 
+/* iPhone screen points and ratio
+    Xs Max  414x896     0.4621
+    Xr      414x896
+    X,Xs    375x812     0.4618
+    8+      414x736     0.5625
+    8       375x667     0.5622
+    5,SE    320x568     0.5634
+
+*/
+
 // fit all types of mobile phones and limit size on desktop
 var getWidth = function () {
     var width = window.innerWidth
@@ -22,9 +32,10 @@ var getHeight = function () {
         || document.documentElement.clientHeight
         || document.body.clientHeight;
     //height = height * window.devicePixelRatio;
-    if (height > 896) { height = 896 }
+    if (height > 736) { height = 736 }
     return height;
 }
+ 
 
 var game;
 
@@ -68,7 +79,6 @@ var Boot = new Phaser.Class({
             },
 
     init: function () {
-
         // initialize the Povin object
         Povin.game = game;
 
