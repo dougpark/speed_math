@@ -54,13 +54,34 @@ style.bodyBackground = '#ffffff';
 //style.bodyBackgroundHighlight = '0xe6e6e6'; // #e6e6e6
 style.bodyHeading = '#b92b27';
 style.bodyText = '#333333';
-style.bodyGraphicH = '0x2092ea'; //#2092ea
+style.bodyGraphicH = '0xb92b27'; //#b92b27 //'0x2092ea'; //#2092ea
+
+style.resultBackgroundH = '0x222222';
 
 style.footerFont = '24px VenusRising';
 style.footerBackgroundH = '0x333333'; // #333333
 style.footerTextBackground = '#ffffff'; //#ffffff
-style.footerText = '#2092ea';
+style.footerTextBackgroundH = '0xffffff'; //#ffffff
+style.footerText = '#b92b27'; //'#2092ea'
 
+class TextButton extends Phaser.GameObjects.Container {
+    constructor(config) { // {scene, width, height, text, textFont, textStyle, 0xbackgroundColor}
+        super(config.scene, 0, 0);
+
+        var b1 = config.scene.add.rectangle(0, 0, config.width, config.height, config.backgroundColor);
+        var b2 = config.scene.add.text(0, 0, config.text, {
+            font: config.textFont,
+            fill: config.textStyle,
+            align: 'center'
+        });
+        b2.setOrigin(.5,.5);
+           
+        this.add([b1, b2]);
+        this.setSize(config.width, config.height);
+        this.setInteractive();
+        config.scene.add.existing(this);
+    }
+};
 
 class RoundButton extends Phaser.GameObjects.Container {
     constructor(config) {
@@ -69,22 +90,45 @@ class RoundButton extends Phaser.GameObjects.Container {
         var b1 = config.scene.add.arc(0, 0, 20, 0, 360, false);
         b1.setStrokeStyle(2, config.style);
         if (config.type=='plus') {
-            //var b2 = scene.add.rectangle(0, 0, 20, 20);
             var b2 = config.scene.add.line(0, 0, 0, 20, 0, 0);
             var b3 = config.scene.add.line(0, 0, 0, 0, 20, 0);
             b2.setStrokeStyle(1, config.style);
             b3.setStrokeStyle(1, config.style);
-        } else {
+            
+        } else if (config.type =='minus') {
             var b2 = config.scene.add.line(0, 0, 0, 0, 20, 0);
             var b3 = config.scene.add.line(0, 0, 0, 0, 20, 0);
             b2.setStrokeStyle(1, config.style);
             b3.setStrokeStyle(1, config.style);
 
-        } 
+        } else if (config.type == 'select') {
+            var b2 = config.scene.add.rectangle(0, 0, 20, 20);
+            b2.visFrame = 1;
+            var b3 = config.scene.add.rectangle(0, 0, 20, 20);
+            b3.visFrame = 1;
+            b2.setStrokeStyle(1, config.style);
+            b3.setStrokeStyle(1, config.style);
+        }
         this.add([b1, b2, b3]);
         this.setSize(40,40);
         this.setInteractive();
         config.scene.add.existing(this);
+        this.setFrame(0);
+    }
+
+    setFrame(frame) {
+        this.getAll().forEach(function (item) {
+            if (item.visFrame == frame) {
+                item.visible = true;
+            } else {
+                item.visible = false;
+            }
+            if (item.visFrame === undefined) {
+                item.visible = true;
+            }
+
+        }, this);
+
     }
 };
 
@@ -103,6 +147,8 @@ class MenuButton extends Phaser.GameObjects.Container {
             this.setSize(40, 40);
             this.setInteractive();
             config.scene.add.existing(this);
+
+            
     }
 };
 
@@ -190,46 +236,29 @@ var MainMenu = new Phaser.Class({
     create: function () {
 
         this.input.keyboard.on('keydown_SPACE', function (event) {
-
             this.nextState();
-
         },this);
-
-        // background image
-        // this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
-        // this.background.alpha = 1;
-
-        // screen rectangle
-        // this.graphics = this.add.graphics(0, 0);
-        // this.graphics.clear();
-        // this.graphics.lineStyle(4, 0x979595, 1);
-        // this.graphics.strokeRect(0, 0, game.config.width, game.config.height);
 
         // background Tile
         this.backTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(1), style.bodyBackgroundH).setOrigin(.5, 0);
         Povin.place(this.backTile, 0.5, 0);
 
-        // header tile
+        // header Tile
         this.headerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.headerBackgroundH).setOrigin(.5, 0);
         Povin.place(this.headerTile, 0.5, 0);
 
-        // footer tile
+        // footer Tile
         this.footerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.footerBackgroundH).setOrigin(.5, 0);
         Povin.place(this.footerTile, 0.5, 0.85);
 
-        //  Title Text
-        // this.title = this.add.sprite(0, 0, 'title');
-        // this.title.setOrigin(0.5, 0.5);
-        // this.title.setScale(1, 1);
-        // Povin.place(this.title, 0.5, 0.07);
-
-        this.tText = this.add.text(0, 0, 'Povin Speed Math', {
+        // Title Heading
+        this.titleHeading = this.add.text(0, 0, 'Povin Speed Math', {
             font: style.headerFont,
             fill: style.headerText,
             align: 'center'
         });
-        this.tText.setOrigin(0.5, 0.5);
-        Povin.place(this.tText, 0.5, 0.07);
+        this.titleHeading.setOrigin(0.5, 0.5);
+        Povin.place(this.titleHeading, 0.5, 0.07);
 
         // Speaker button to start/stop the background music
         this.buttonSpeaker = new SpeakerButton({
@@ -250,7 +279,6 @@ var MainMenu = new Phaser.Class({
             scene: this,
             style: style.headerGraphicH,
         });
-        
         this.buttonHome.on('pointerdown', function () {
             Povin.actionOnClickHome({
                 target: this,
@@ -261,37 +289,48 @@ var MainMenu = new Phaser.Class({
         Povin.place(this.buttonHome, 0.07, 0.055);
 
         // Go Button
-        // this.buttonGo = this.add.image(0, 0, 'buttonGo').setInteractive();
-        // this.buttonGo.on('pointerdown', this.nextState, this);
-        // this.buttonGo.setOrigin(0.5, 0.5);
-        // this.buttonGo.setScale(1, 1);
-        // Povin.place(this.buttonGo, 0.5, 0.93);
-        // this.buttonGo.inputEnabled = true;
+        // this.buttonGo = this.add.text(0, 0, '      Go      ', {
+        //      font: style.footerFont,
+        //      fill: style.footerText,
+        //      backgroundColor: style.footerTextBackground,
+        //      align: 'center'
+        //  }).setInteractive();
 
-        this.buttonGo = this.add.text(0, 0, '      Go      ', {
-             font: style.footerFont,
-             fill: style.footerText,
-             backgroundColor: style.footerTextBackground,
-             align: 'center'
-         }).setInteractive();
+         this.buttonGo = new TextButton({
+             scene: this,
+             width: Povin.placeX(.40),
+             height: Povin.placeY(.08),
+             text: 'Go',
+             textFont: style.footerFont,
+             textStyle: style.footerText,
+             backgroundColor: style.footerTextBackgroundH
+         });
+
          this.buttonGo.on('pointerdown', this.nextState, this);
-         this.buttonGo.fixedHeight=(Povin.placeY(.1));
+         //this.buttonGo.fixedHeight=(Povin.placeY(.1));
          //this.buttonGo.setFixedSize(Povin.placeX(.2),Povin.placeY(.1));
-         this.buttonGo.setOrigin(0.5, 0.5);
-
+         //this.buttonGo.setOrigin(0.5, 0.5);
          Povin.place(this.buttonGo, 0.5, 0.93);
        
 
         //
         // Test Type Heading
         //
-        this.testTypeHeading = this.add.text(0, 0, 'Test Type', { font: style.bodyFont, fill: style.bodyHeading, align: 'center' });
+        this.testTypeHeading = this.add.text(0, 0, 'Test Type', { 
+            font: style.bodyFont, 
+            fill: style.bodyHeading, 
+            align: 'center' 
+        });
         this.testTypeHeading.setOrigin(0.5, 0.5);
         Povin.place(this.testTypeHeading, 0.5, 0.25);
 
         // Test Type Text
         this.testTypeString = option.arithmeticArray[option.arithmeticType];
-        this.testTypeText = this.add.text(0, 0, this.testTypeString, { font: style.bodyFont, fill: style.bodyText, align: 'center' });
+        this.testTypeText = this.add.text(0, 0, this.testTypeString, { 
+            font: style.bodyFont, 
+            fill: style.bodyText, 
+            align: 'center' 
+        });
         this.testTypeText.setOrigin(0.5, 0.5);
         Povin.place(this.testTypeText, 0.5, 0.30);
 
@@ -537,7 +576,7 @@ var MainMenu = new Phaser.Class({
         this.anims.create(config);
         this.invader = this.add.sprite(400, 100, 'invader').play('fly');
         this.invader.setOrigin(0.5, 0.5);
-        Povin.place(this.invader, .5, .15);
+        Povin.place(this.invader, .5, .18);
 
         
 

@@ -69,72 +69,113 @@ var PMath = new Phaser.Class({
         this.input.keyboard.on('keydown_SPACE', function (event) {
             game.ctx.actionOnClickGo({
                 ctx: game.ctx
+
             });
         });
-
-        // background image
-        this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
-        this.background.alpha = 1;
-
-        // screen rectangle
-        this.graphics = this.add.graphics(0, 0);
-        this.graphics.clear();
-        this.graphics.lineStyle(4, 0x979595, 1);
-        this.graphics.strokeRect(0, 0, game.config.width, game.config.height);
 
         // audio
         this.perfectSfx = this.sound.add('perfectSfx');
         this.wrongSfx = this.sound.add('wrongSfx');
         this.lateSfx = this.sound.add('lateSfx');
 
+        // background Tile
+        this.backTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(1), style.bodyBackgroundH).setOrigin(.5, 0);
+        Povin.place(this.backTile, 0.5, 0);
+
+        // header Tile
+        this.headerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.headerBackgroundH).setOrigin(.5, 0);
+        Povin.place(this.headerTile, 0.5, 0);
+
+        // question Tile
+        this.questionTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.footerBackgroundH).setOrigin(.5, 0);
+        Povin.place(this.questionTile, 0.5, 0.4);
+
+
+        // footer Tile
+        this.footerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.footerBackgroundH).setOrigin(.5, 0);
+        Povin.place(this.footerTile, 0.5, 0.85);
+
+        // Title Heading
+        this.titleHeading = this.add.text(0, 0, 'Povin Speed Math', {
+            font: style.headerFont,
+            fill: style.headerText,
+            align: 'center'
+        });
+        this.titleHeading.setOrigin(0.5, 0.5);
+        Povin.place(this.titleHeading, 0.5, 0.07);
+
         // Speaker button to start/stop the background music
-        this.buttonSpeaker = this.add.image(0, 0, 'buttonSpeaker').setInteractive();
+        this.buttonSpeaker = new SpeakerButton({
+            scene: this,
+            style: style.headerGraphicH,
+        });
         this.buttonSpeaker.on('pointerdown', function () {
             Povin.actionOnClickSpeaker({
                 target: this,
                 ctx: game.ctx
             });
         });
-        this.buttonSpeaker.setOrigin(0.5, 0.5);
-        this.buttonSpeaker.setScale(1, 1);
         Povin.place(this.buttonSpeaker, 0.9, 0.07);
         Povin.setSpeakerFrame(this.buttonSpeaker);
 
         // Home button to return to the main menu
-        this.buttonHome = this.add.image(0, 0, 'buttonHome').setInteractive();
+        this.buttonHome = new MenuButton({
+            scene: this,
+            style: style.headerGraphicH,
+        });
         this.buttonHome.on('pointerdown', function () {
             Povin.actionOnClickHome({
                 target: this,
                 ctx: game.ctx
             });
         });
-        this.buttonHome.setOrigin(0.5, 0.5);
-        this.buttonHome.nextState = 'MainMenu';
-        this.buttonHome.setScale(.8);
-        this.buttonHome.normScale = .8;
-        Povin.place(this.buttonHome, 0.09, 0.07);
+        this.buttonHome.nextState = 'Scores';
+        Povin.place(this.buttonHome, 0.07, 0.055);
 
-        // animate the invader
-        // var config = {
-        //     key: 'fly',
-        //     frames: this.anims.generateFrameNumbers('invader', {
-        //         frames: [0, 1, 2, 3]
-        //     }),
-        //     frameRate: 20,
-        //     repeat: -1
-        // };
+        // Go Button
+        // this.buttonGo = this.add.text(0, 0, '      Go      ', {
+        //     font: style.footerFont,
+        //     fill: style.footerText,
+        //     backgroundColor: style.footerTextBackground,
+        //     align: 'center'
+        // }).setInteractive();
 
+        this.buttonGo = new TextButton({
+            scene: this,
+            width: Povin.placeX(.40),
+            height: Povin.placeY(.08),
+            text: 'Go',
+            textFont: style.footerFont,
+            textStyle: style.footerText,
+            backgroundColor: style.footerTextBackgroundH
+        });
+        // //this.buttonGo.on('pointerdown', this.actionOnClickGo,this);
+        this.buttonGo.on('pointerdown', function () {
+            game.ctx.actionOnClickGo({
+                target: this,
+                ctx: game.ctx
+            });
+        });
+        Povin.place(this.buttonGo, 0.5, 0.93);
+        this.buttonGo.inputEnabled = true;
+
+        // for all interactive objects
+        this.input.on('gameobjectdown', this.onObjectDown);
+        //this.input.on('gameobjectup', this.onObjectUp);
+        this.input.on('gameobjectover', this.onObjectOver);
+        this.input.on('gameobjectout', this.onObjectOut);
+   
         //this.anims.create(config);
         this.invader = this.add.sprite(0, 0, 'invader').play('fly');
         this.invader.setOrigin(0.5, 0.5);
-        Povin.place(this.invader, .2, .95);
+        Povin.place(this.invader, .2, .81);
         
         // this.invaderTween = this.tweens.add(this.invader).to({ x: Povin.placeX(.8), y: Povin.placeY(.95) },
         //     option.buzzer, Phaser.Easing.Quadratic.InOut, true, 0, 1000, true);
         game.ctx.tweens.add({
             targets: this.invader,
             x: Povin.placeX(.8),
-            y: Povin.placeY(.95),
+            y: Povin.placeY(.81),
             ease: 'Phaser.Math.Easing.Linear',
             yoyo: true,
             repeat: -1,
@@ -144,7 +185,7 @@ var PMath = new Phaser.Class({
         // invader 2
         this.invader2 = this.add.sprite(0, 0, 'invader').play('fly');
         this.invader2.setOrigin(0.5, 0.5);
-        Povin.place(this.invader2, .5, .15);
+        Povin.place(this.invader2, .5, .18);
 
         // One Button
         // this.button1 = game.add.button(0, 0, 'buttonAnswer', this.actionOnClick1, this, 1, 0, 0);
@@ -152,7 +193,12 @@ var PMath = new Phaser.Class({
         // this.button1.scale.setTo(1, 1);
         // Povin.place(this.button1, 0.3, 0.67);
         // this.button1.inputEnabled = true;
-        this.button1 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
+        //this.button1 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
+        this.button1 = new RoundButton({
+            scene: this,
+            style: style.bodyGraphicH,
+            type: 'select'
+        });
         this.button1.on('pointerdown', function () {
             game.ctx.actionOnClick1({
                 target: this,
@@ -160,7 +206,7 @@ var PMath = new Phaser.Class({
             });
         });
         this.button1.inputEnabled = true;
-        this.button1.setOrigin(0.5, 0.5);
+        //this.button1.setOrigin(0.5, 0.5);
         Povin.place(this.button1, 0.3, 0.67);
     
         // Two Button
@@ -171,7 +217,12 @@ var PMath = new Phaser.Class({
         // this.button2.inputEnabled = true;
         // this.button2.events.onInputDown.add(this.onInputDown, this);
         // this.button2.events.onInputUp.add(this.onInputUp, this);
-        this.button2 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
+        //this.button2 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
+        this.button2 = new RoundButton({
+            scene: this,
+            style: style.bodyGraphicH,
+            type: 'select'
+        });
         this.button2.on('pointerdown', function () {
             game.ctx.actionOnClick2({
                 target: this,
@@ -179,7 +230,7 @@ var PMath = new Phaser.Class({
             });
         });
         this.button2.inputEnabled = true;
-        this.button2.setOrigin(0.5, 0.5);
+        //this.button2.setOrigin(0.5, 0.5);
         Povin.place(this.button2, 0.5, 0.67);
 
         // Three Button
@@ -190,7 +241,12 @@ var PMath = new Phaser.Class({
         // this.button3.inputEnabled = true;
         // this.button3.events.onInputDown.add(this.onInputDown, this);
         // this.button3.events.onInputUp.add(this.onInputUp, this);
-        this.button3 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
+        //this.button3 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
+        this.button3 = new RoundButton({
+            scene: this,
+            style: style.bodyGraphicH,
+            type: 'select'
+        });
         this.button3.on('pointerdown', function () {
             game.ctx.actionOnClick3({
                 target: this,
@@ -198,7 +254,7 @@ var PMath = new Phaser.Class({
             });
         });
         this.button3.inputEnabled = true;
-        this.button3.setOrigin(0.5, 0.5);
+        //this.button3.setOrigin(0.5, 0.5);
         Povin.place(this.button3, 0.7, 0.67);
         
         // Disable until Go
@@ -214,95 +270,150 @@ var PMath = new Phaser.Class({
         // this.buttonGo.inputEnabled = true;
         // this.buttonGo.events.onInputDown.add(this.onInputDown, this);
         // this.buttonGo.events.onInputUp.add(this.onInputUp, this);
-        this.buttonGo = this.add.image(0, 0, 'buttonGo').setInteractive();
-        this.buttonGo.on('pointerdown', function () {
-            game.ctx.actionOnClickGo({
-                target: this,
-                ctx: game.ctx
-            });
-        });
-        this.buttonGo.inputEnabled = true;
-        this.buttonGo.setOrigin(0.5, 0.5);
-        Povin.place(this.buttonGo, 0.5, 0.85);
+
+        // this.buttonGo = this.add.image(0, 0, 'buttonGo').setInteractive();
+        // this.buttonGo.on('pointerdown', function () {
+        //     game.ctx.actionOnClickGo({
+        //         target: this,
+        //         ctx: game.ctx
+        //     });
+        // });
+        // this.buttonGo.inputEnabled = true;
+        // this.buttonGo.setOrigin(0.5, 0.5);
+        // Povin.place(this.buttonGo, 0.5, 0.85);
         
         //  title Text
-        this.title = this.add.sprite(0, 0, 'title');
-        this.title.setOrigin(0.5, 0.5);
-        this.title.setScale(1, 1);
-        Povin.place(this.title, 0.5, 0.07);
+        // this.title = this.add.sprite(0, 0, 'title');
+        // this.title.setOrigin(0.5, 0.5);
+        // this.title.setScale(1, 1);
+        // Povin.place(this.title, 0.5, 0.07);
   
         //  Question Text
         this.qString = ' Press Go \n to Start ';
-        this.qText = this.add.text(0, 0, this.qString, { font: '30px ' + this.myFont2, fill: '#ebebeb', backgroundColor: '#005300', align: 'center' });
+        this.qText = this.add.text(0, 0, this.qString, { 
+            font: '30px ' + this.myFont2, 
+            fill: style.bodyBackground, //'#ebebeb', 
+            //backgroundColor: style.bodyText, // new
+            align: 'center' 
+        });
         this.qText.setOrigin(0.5,0.5);
-        Povin.place(this.qText, 0.5, 0.45);
+        Povin.place(this.qText, 0.5, 0.47);
 
         //  Status Text
         this.sString = '';
-        this.sText = this.add.text(0, 0, this.sString, { font: '24px ' + this.myFont, fill: '#ebebeb', backgroundColor: '#005300', align: 'center' });
+        this.sText = this.add.text(0, 0, this.sString, { 
+            font: '24px ' + this.myFont, 
+            fill: style.bodyText, //'#ebebeb',
+            //backgroundColor: style.bodyText, // new
+            align: 'center' });
         this.sText.setOrigin(0.5, 0.5);
         Povin.place(this.sText, 0.5, 0.37);
 
         //  Question Result Text
         this.qRString = '';
-        this.qRText = this.add.text(0, 0, this.qRString, { font: '24px ' + this.myFont, fill: '#ebebeb', backgroundColor: '#005300', align: 'center' });
+        this.qRText = this.add.text(0, 0, this.qRString, { 
+            font: '24px ' + this.myFont, 
+            fill: style.bodyText, //'#ebebeb', 
+            //backgroundColor: style.bodyText, // new
+            align: 'center' 
+        });
         this.qRText.setOrigin(0.5, 0.5);
         Povin.place(this.qRText, 0.5, 0.760);
 
         //  Question Wrong Result Text
         this.qWString = '';
-        this.qWText = this.add.text(0, 0, this.qRString, { font: '24px ' + this.myFont, fill: '#ebebeb', backgroundColor: '#ad0000', align: 'center' });
+        this.qWText = this.add.text(0, 0, this.qRString, { 
+            font: '24px ' + this.myFont, 
+            fill: style.bodyBackground, //'#ebebeb', 
+            backgroundColor: style.bodyHeading, //'#ad0000', // new
+            align: 'center' });
         this.qWText.setOrigin(0.5, 0.5);
         Povin.place(this.qWText, 0.5, 0.760);
 
         //  Answer 1 Text
         this.a1String = '';
-        this.a1Text = this.add.text(0, 0, this.a1String, { font: '20px ' + this.myFont2, fill: '#ebebeb', align: 'center' });
+        this.a1Text = this.add.text(0, 0, this.a1String, {
+                    font: style.bodyFont,
+                    fill: style.bodyText,
+                    align: 'center'
+                });
         this.a1Text.setOrigin(0.5, 0.5);
         Povin.place(this.a1Text, 0.3, 0.6);
 
         //  Answer 2 Text
         this.a2String = '';
-        this.a2Text = this.add.text(0, 0, this.a2String, { font: '20px ' + this.myFont2, fill: '#ebebeb', align: 'center' });
+        this.a2Text = this.add.text(0, 0, this.a2String, {
+            font: style.bodyFont,
+            fill: style.bodyText,
+            align: 'center'
+        });
         this.a2Text.setOrigin(0.5, 0.5);
         Povin.place(this.a2Text, 0.5, 0.6);
 
         //  Answer 3 Text
         this.a3String = '';
-        this.a3Text = this.add.text(0, 0, this.a3String, { font: '20px ' + this.myFont2, fill: '#ebebeb', align: 'center' });
+        this.a3Text = this.add.text(0, 0, this.a3String, {
+            font: style.bodyFont,
+            fill: style.bodyText,
+            align: 'center'
+        });
         this.a3Text.setOrigin(0.5, 0.5);
         Povin.place(this.a3Text, 0.7, 0.6);
 
         // Level Heading
         this.cString = 'Level';
-        this.cText = this.add.text(0, 0, this.cString, { font: '20px ' + this.myFont, fill: '#ad0000', align: 'center' });
+        this.cText = this.add.text(0, 0, this.cString, {
+            font: style.bodyFont,
+            fill: style.bodyHeading,
+            align: 'center'
+        });
         this.cText.setOrigin(0.5, 0.5);
         Povin.place(this.cText, 0.2, 0.24);
         // Level Text
         this.c2String = option.level;
-        this.c2Text = this.add.text(0, 0, this.c2String, { font: '20px ' + this.myFont, fill: '#ebebeb', align: 'center' });
+        this.c2Text = this.add.text(0, 0, this.c2String, {
+            font: style.bodyFont,
+            fill: style.bodyText,
+            align: 'center'
+        });
         this.c2Text.setOrigin(0.5, 0.5);
         Povin.place(this.c2Text, 0.2, 0.3);
 
         // Right Count Heading
         this.rString = 'Right';
-        this.rText = this.add.text(0, 0, this.rString, { font: '20px ' + this.myFont, fill: '#ad0000', align: 'center' });
+        this.rText = this.add.text(0, 0, this.rString, {
+            font: style.bodyFont,
+            fill: style.bodyHeading,
+            align: 'center'
+        });
         this.rText.setOrigin(0.5, 0.5);
         Povin.place(this.rText, 0.8, 0.24);
         // Right Count Text
         this.r2String = '0';
-        this.r2Text = this.add.text(0, 0, this.r2String, { font: '20px ' + this.myFont, fill: '#ebebeb', align: 'center' });
+        this.r2Text = this.add.text(0, 0, this.r2String, {
+            font: style.bodyFont,
+            fill: style.bodyText,
+            align: 'center'
+        });
         this.r2Text.setOrigin(0.5, 0.5);
         Povin.place(this.r2Text, 0.8, 0.3);
 
         // Timer Heading
         this.tHString = 'Time';
-        this.tHText = this.add.text(0, 0, this.tHString, { font: '20px ' + this.myFont, fill: '#ad0000', align: 'center' });
+        this.tHText = this.add.text(0, 0, this.tHString, {
+            font: style.bodyFont,
+            fill: style.bodyHeading,
+            align: 'center'
+        });
         this.tHText.setOrigin(0.5, 0.5);
         Povin.place(this.tHText, 0.5, 0.24);
         // Timer Text
         this.timerString = '0';
-        this.timerText = this.add.text(0, 0, this.timerString, { font: '20px ' + this.myFont, fill: '#ebebeb', align: 'center' });
+        this.timerText = this.add.text(0, 0, this.timerString, {
+            font: style.bodyFont,
+            fill: style.bodyText,
+            align: 'center'
+        });
         this.timerText.setOrigin(0.5, 0.5);
         Povin.place(this.timerText, 0.5, 0.3);
 
@@ -310,6 +421,57 @@ var PMath = new Phaser.Class({
         this.initQuestion();
         
     }, // end create
+
+    //
+    // for all interactive buttons
+    //
+    onObjectDown: function (pointer, target) {
+            game.ctx.tweens.add({
+                targets: target,
+                scaleX: (target.normScale ? target.normScale * .8 : .8),
+                scaleY: (target.normScale ? target.normScale * .8 : .8),
+                ease: 'Bounce.easeOut',
+                duration: 100
+            });
+            game.ctx.tweens.add({
+                targets: target,
+                scaleX: (target.normScale ? target.normScale : 1),
+                scaleY: (target.normScale ? target.normScale : 1),
+                ease: 'Sine.easeInOut',
+                delay: 100,
+                duration: 100
+            });
+        },
+        onObjectUp: function (pointer, target) {
+            game.ctx.tweens.add({
+                targets: target,
+                scaleX: (target.normScale ? target.normScale : 1),
+                scaleY: (target.normScale ? target.normScale : 1),
+                ease: 'Sine.easeInOut',
+                duration: 100
+            });
+        },
+        onObjectOver: function (pointer, target) {
+            // game.ctx.tweens.add({
+            //     targets: target,
+            //     scaleX: 1.1,
+            //     scaleY: 1.1,
+            //     ease: 'Sine.easeInOut',
+            //     duration: 100
+            // });
+            ///target.setTint(0xeb0000);
+        },
+        onObjectOut: function (pointer, target) {
+            game.ctx.tweens.add({
+                targets: target,
+                scaleX: (target.normScale ? target.normScale : 1),
+                scaleY: (target.normScale ? target.normScale : 1),
+                ease: 'Sine.easeInOut',
+                duration: 100
+            });
+            /// target.setTint(0xffffff);
+        },
+
     
     update: function() {
         if (this.timer) {
@@ -517,7 +679,7 @@ var PMath = new Phaser.Class({
         this.qWText.text = '';
         this.trigger = true;
         this.slow = false;
-        this.qText.style.backgroundColor = '#000000';
+        //this.qText.style.backgroundColor = '#000000';
 
         this.questCurr++;
         this.nextQuestion();
@@ -589,14 +751,14 @@ var PMath = new Phaser.Class({
 
             // display 'Extended Round' message
             this.sText.text = ' Extended Round ';
-            this.sText.style.backgroundColor = '#979696';
+            //this.sText.style.backgroundColor = '#979696';
         }
 
         if (this.roundComplete) {
 
             // display 'Round Complete' message
             this.sText.text = ' Round Complete! '
-            this.sText.style.backgroundColor = '#005300';
+            //this.sText.style.backgroundColor = '#005300';
         }
     },
 
@@ -685,7 +847,7 @@ var PMath = new Phaser.Class({
         // showAnswer
         if (showAnswer) {
             this.qText.text = '     '+this.qText.text+' = '+this.a + '     ';
-            this.qText.style.backgroundColor = '#005300';
+            //this.qText.style.backgroundColor = '#005300';
         }
 
         // correct number of questions
@@ -729,6 +891,7 @@ var PMath = new Phaser.Class({
 
     // button Go
     actionOnClickGo: function (config) {
+        
         if (config.ctx.buttonGo.inputEnabled) {
             if (config.ctx.roundComplete) {
                 config.ctx.nextState();

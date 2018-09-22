@@ -27,16 +27,9 @@ var Scores = new Phaser.Class({
     },
 
     copyToHistory: function () {
-
-
         for (let key of Object.keys(Povin.scoreArr)) {
-
             Povin.historyArr[key] =  Povin.scoreArr[key]; 
-           
-
-        }
-        
-        
+        }    
     },
 
     preload: function () {
@@ -46,63 +39,95 @@ var Scores = new Phaser.Class({
     create: function () {
 
         this.input.keyboard.on('keydown_SPACE', function (event) {
-
             game.ctx.nextState();
-
         });
 
-        // background image
-        this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
-        this.background.alpha = 1;
+         // background Tile
+         this.backTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(1), style.bodyBackgroundH).setOrigin(.5, 0);
+         Povin.place(this.backTile, 0.5, 0);
 
-        // screen rectangle
-        this.graphics = this.add.graphics(0, 0);
-        this.graphics.clear();
-        this.graphics.lineStyle(4, 0x979595, 1);
-        this.graphics.strokeRect(0, 0, game.config.width, game.config.height);
+         // header Tile
+         this.headerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.headerBackgroundH).setOrigin(.5, 0);
+         Povin.place(this.headerTile, 0.5, 0);
 
-        //  Title Text
-        this.title = this.add.sprite(0, 0, 'title');
-        this.title.setOrigin(0.5, 0.5);
-        this.title.setScale(1, 1);
-        Povin.place(this.title, 0.5, 0.07);
+         // question Tile
+         this.questionTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.75), style.resultBackgroundH).setOrigin(.5, 0);
+         Povin.place(this.questionTile, 0.5, 0.24);
 
 
-       // Speaker button to start/stop the background music
-       this.buttonSpeaker = this.add.image(0, 0, 'buttonSpeaker').setInteractive();
-       this.buttonSpeaker.on('pointerdown', function () {
-           Povin.actionOnClickSpeaker({
-               target: this,
-               ctx: game.ctx
-           });
-       });
-       this.buttonSpeaker.setOrigin(0.5, 0.5);
-       this.buttonSpeaker.setScale(1, 1);
-       Povin.place(this.buttonSpeaker, 0.9, 0.07);
-       Povin.setSpeakerFrame(this.buttonSpeaker);
+         // footer Tile
+         this.footerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.footerBackgroundH).setOrigin(.5, 0);
+         Povin.place(this.footerTile, 0.5, 0.85);
 
-        // Home button to return to the main menu
-        this.buttonHome = this.add.image(0, 0, 'buttonHome').setInteractive();
-        this.buttonHome.on('pointerdown', function () {
-            Povin.actionOnClickHome({
-                target: this,
-                ctx: game.ctx
-            });
-        });
-        this.buttonHome.setOrigin(0.5, 0.5);
-        this.buttonHome.nextState = 'MainMenu';
-        this.buttonHome.setScale(.8);
-        this.buttonHome.normScale = .8;
-        Povin.place(this.buttonHome, 0.09, 0.07);
+         // Title Heading
+         this.titleHeading = this.add.text(0, 0, 'Povin Speed Math', {
+             font: style.headerFont,
+             fill: style.headerText,
+             align: 'center'
+         });
+         this.titleHeading.setOrigin(0.5, 0.5);
+         Povin.place(this.titleHeading, 0.5, 0.07);
 
-        // Go Button
-        this.buttonGo = this.add.image(0, 0, 'buttonGo').setInteractive();
-        this.buttonGo.on('pointerdown', this.nextState, this);
+         // Speaker button to start/stop the background music
+         this.buttonSpeaker = new SpeakerButton({
+             scene: this,
+             style: style.headerGraphicH,
+         });
+         this.buttonSpeaker.on('pointerdown', function () {
+             Povin.actionOnClickSpeaker({
+                 target: this,
+                 ctx: game.ctx
+             });
+         });
+         Povin.place(this.buttonSpeaker, 0.9, 0.07);
+         Povin.setSpeakerFrame(this.buttonSpeaker);
 
-        this.buttonGo.setOrigin(0.5, 0.5);
-        this.buttonGo.setScale(1, 1);
-        Povin.place(this.buttonGo, 0.5, 0.90);
-        this.buttonGo.inputEnabled = true;
+         // Home button to return to the main menu
+         this.buttonHome = new MenuButton({
+             scene: this,
+             style: style.headerGraphicH,
+         });
+         this.buttonHome.on('pointerdown', function () {
+             Povin.actionOnClickHome({
+                 target: this,
+                 ctx: game.ctx
+             });
+         });
+         this.buttonHome.nextState = 'MainMenu';
+         Povin.place(this.buttonHome, 0.07, 0.055);
+
+         // Go Button
+         // this.buttonGo = this.add.text(0, 0, '      Go      ', {
+         //     font: style.footerFont,
+         //     fill: style.footerText,
+         //     backgroundColor: style.footerTextBackground,
+         //     align: 'center'
+         // }).setInteractive();
+
+         this.buttonGo = new TextButton({
+             scene: this,
+             width: Povin.placeX(.40),
+             height: Povin.placeY(.08),
+             text: 'Go',
+             textFont: style.footerFont,
+             textStyle: style.footerText,
+             backgroundColor: style.footerTextBackgroundH
+         });
+         // //this.buttonGo.on('pointerdown', this.actionOnClickGo,this);
+         this.buttonGo.on('pointerdown', function () {
+             game.ctx.actionOnClickGo({
+                 target: this,
+                 ctx: game.ctx
+             });
+         });
+         Povin.place(this.buttonGo, 0.5, 0.93);
+         this.buttonGo.inputEnabled = true;
+
+         // for all interactive objects
+         this.input.on('gameobjectdown', this.onObjectDown);
+         //this.input.on('gameobjectup', this.onObjectUp);
+         this.input.on('gameobjectover', this.onObjectOver);
+         this.input.on('gameobjectout', this.onObjectOut);
 
         // History Heading
         this.aString = option.getTypeSt();
@@ -110,7 +135,13 @@ var Scores = new Phaser.Class({
         this.aText.setOrigin(0.5, 0.5);
         Povin.place(this.aText, 0.5, 0.20);
         // ArPlus
-        this.buttonArPlus = this.add.image(0, 0, 'buttonPlus').setInteractive();
+        //this.buttonArPlus = this.add.image(0, 0, 'buttonPlus').setInteractive();
+         // Ar Plus Button
+         this.buttonArPlus = new RoundButton({
+             scene: this,
+             style: style.bodyGraphicH,
+             type: 'plus'
+         });
         this.buttonArPlus.on('pointerdown', function () {
             game.ctx.actionOnClickAr({
                 target: this,
@@ -118,12 +149,17 @@ var Scores = new Phaser.Class({
             });
         });
         this.buttonArPlus.direction = 1;
-        this.buttonArPlus.setOrigin(0.5, 0.5);
+        //this.buttonArPlus.setOrigin(0.5, 0.5);
         //this.buttonArPlus.setScale(.8, .8);
         Povin.place(this.buttonArPlus, 0.9, 0.20);
 
         // ArMinus
-        this.buttonArMinus = this.add.image(0, 0, 'buttonMinus').setInteractive();
+        //this.buttonArMinus = this.add.image(0, 0, 'buttonMinus').setInteractive();
+        this.buttonArMinus = new RoundButton({
+            scene: this,
+            style: style.bodyGraphicH,
+            type: 'minus'
+        });
         this.buttonArMinus.on('pointerdown', function () {
             game.ctx.actionOnClickAr({
                 target: this,
@@ -131,7 +167,7 @@ var Scores = new Phaser.Class({
             });
         });
         this.buttonArMinus.direction = -1;
-        this.buttonArMinus.setOrigin(0.5, 0.5);
+        //this.buttonArMinus.setOrigin(0.5, 0.5);
         //this.buttonArPlus.setScale(.8, .8);
         Povin.place(this.buttonArMinus, 0.1, 0.20);
 
@@ -158,6 +194,62 @@ var Scores = new Phaser.Class({
         
     }, // end create:
 
+     // button Go
+     actionOnClickGo: function (config) {
+        config.ctx.nextState();
+     },
+
+     //
+     // for all interactive buttons
+     //
+     onObjectDown: function (pointer, target) {
+             game.ctx.tweens.add({
+                 targets: target,
+                 scaleX: (target.normScale ? target.normScale * .8 : .8),
+                 scaleY: (target.normScale ? target.normScale * .8 : .8),
+                 ease: 'Bounce.easeOut',
+                 duration: 100
+             });
+             game.ctx.tweens.add({
+                 targets: target,
+                 scaleX: (target.normScale ? target.normScale : 1),
+                 scaleY: (target.normScale ? target.normScale : 1),
+                 ease: 'Sine.easeInOut',
+                 delay: 100,
+                 duration: 100
+             });
+         },
+         onObjectUp: function (pointer, target) {
+             game.ctx.tweens.add({
+                 targets: target,
+                 scaleX: (target.normScale ? target.normScale : 1),
+                 scaleY: (target.normScale ? target.normScale : 1),
+                 ease: 'Sine.easeInOut',
+                 duration: 100
+             });
+         },
+         onObjectOver: function (pointer, target) {
+             // game.ctx.tweens.add({
+             //     targets: target,
+             //     scaleX: 1.1,
+             //     scaleY: 1.1,
+             //     ease: 'Sine.easeInOut',
+             //     duration: 100
+             // });
+             ///target.setTint(0xeb0000);
+         },
+         onObjectOut: function (pointer, target) {
+             game.ctx.tweens.add({
+                 targets: target,
+                 scaleX: (target.normScale ? target.normScale : 1),
+                 scaleY: (target.normScale ? target.normScale : 1),
+                 ease: 'Sine.easeInOut',
+                 duration: 100
+             });
+             /// target.setTint(0xffffff);
+         },
+
+
     actionOnClickAr: function (config) {
         config.ctx.typeId += config.target.direction;
         if (config.ctx.typeId > 4) {
@@ -169,35 +261,18 @@ var Scores = new Phaser.Class({
         config.ctx.aText.text = option.getTypeSt(config.ctx.typeId);
 
         config.ctx.displayChart();
-
         config.ctx.displayHistory();
-    },
-
-    onInputDown: function (target) {
-        target.sx = target.scale.x;
-        target.sy = target.scale.y;
-        game.add.tween(target.scale).to({
-            x: target.sx * .8,
-            y: target.sy * .8
-        }, 100, Phaser.Easing.Cubic.Out, true);
-    },
-
-    onInputUp: function (target) {
-        game.add.tween(target.scale).to({
-            x: target.sx,
-            y: target.sy
-        }, 100, Phaser.Easing.Cubic.Out, true);
     },
 
     // draw the chart grid
     displayChart: function() {
 
-        
+        console.log('displayChart')
         //this.chart.key ='img'; 
         //this.chart.dirty=true;
         //this.chart.update();
         this.chart.clear();
-        this.chart.update();
+        ///this.chart.update();
 
         // place the outline of the chart grid on the screen
         Povin.place(this.chart,.16,.285);
@@ -214,12 +289,23 @@ var Scores = new Phaser.Class({
 
         var iCount = 0;
 
-        this.add.text(Povin.placeX(.05), Povin.placeY(.42),'F\nA\nC\nT\nO\nR\nS', { font: '12px ' + this.myFont, fill: '#ebebeb', align: 'center' });
-        var m = this.add.text(Povin.placeX(.5), Povin.placeY(.8),'Met acuracy and speed requirements', { font: '12px ' + this.myFont, fill: '#005300', align: 'center' });
+        this.add.text(Povin.placeX(.05), Povin.placeY(.42),'F\nA\nC\nT\nO\nR\nS', { 
+            font: '12px ' + this.myFont, 
+            fill: '#ebebeb', 
+            align: 'center' 
+        });
+        var m = this.add.text(Povin.placeX(.5), Povin.placeY(.79),'Met acuracy and speed requirements', { 
+            font: '12px ' + this.myFont, 
+            fill: '#005300', 
+            align: 'center' 
+        });
         m.setOrigin(0.5, 0.5);
-        var p = this.add.text(Povin.placeX(.5), Povin.placeY(.82),'Need to keep practicing', { font: '12px ' + this.myFont, fill: '#ad0000', align: 'center' });
+        var p = this.add.text(Povin.placeX(.5), Povin.placeY(.81),'Need to keep practicing', { 
+            font: '12px ' + this.myFont, 
+            fill: '#ad0000', 
+            align: 'center' });
         p.setOrigin(0.5, 0.5);
-        this.q = this.add.text(Povin.placeX(.5), Povin.placeY(.84), 'Avg time per problem: ', {
+        this.q = this.add.text(Povin.placeX(.5), Povin.placeY(.83), 'Avg time per problem: ', {
             font: '12px ' + this.myFont,
             fill: '#ebebeb',
             align: 'center'
@@ -273,8 +359,8 @@ var Scores = new Phaser.Class({
         if (color == 1) { myColor = '0x005300'}
         if (color == 2) { myColor = '0xad0000'}
 
-        this.chart.lineStyle(1, myColor, .75);
-        this.chart.fillStyle(myColor,.75);
+        this.chart.lineStyle(1, myColor, 1);
+        this.chart.fillStyle(myColor,1);
         this.chart.fillRect(myX, myY, 15, 15);
     },
 
@@ -290,6 +376,8 @@ var Scores = new Phaser.Class({
         var count = 0;
         var avg = 0;
         var totAvg = 0;
+
+        console.log('displayHistory')
 
         for (y = 1; y<= 15; y++) {
             
@@ -315,23 +403,6 @@ var Scores = new Phaser.Class({
         // calc avg time for all problems
         totAvg = avg / count;
         this.q.text += (totAvg/1000).toFixed(4); // update text with avg time
-    },
-
-
-    onInputDown: function (target) {
-        target.sx = target.scale.x;
-        target.sy = target.scale.y;
-        game.add.tween(target.scale).to({
-            x: target.sx * .8,
-            y: target.sy * .8
-        }, 100, Phaser.Easing.Cubic.Out, true);
-    },
-
-    onInputUp: function (target) {
-        game.add.tween(target.scale).to({
-            x: target.sx,
-            y: target.sy
-        }, 100, Phaser.Easing.Cubic.Out, true);
     },
 
     update: function () {
