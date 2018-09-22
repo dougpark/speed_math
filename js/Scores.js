@@ -68,17 +68,21 @@ var Scores = new Phaser.Class({
         Povin.place(this.title, 0.5, 0.07);
 
 
-        // Speaker button to start/stop the background music
-        this.buttonSpeaker = this.add.image(0, 0, 'buttonSpeaker').setInteractive();
-        this.buttonSpeaker.on('pointerdown', Povin.actionOnClickSpeaker, this);
-        this.buttonSpeaker.setOrigin(0.5, 0.5);
-        this.buttonSpeaker.setScale(1, 1);
-        Povin.place(this.buttonSpeaker, 0.9, 0.07);
-        Povin.setSpeakerTexture(this.buttonSpeaker);
+       // Speaker button to start/stop the background music
+       this.buttonSpeaker = this.add.image(0, 0, 'buttonSpeaker').setInteractive();
+       this.buttonSpeaker.on('pointerdown', function () {
+           Povin.actionOnClickSpeaker({
+               target: this,
+               ctx: game.ctx
+           });
+       });
+       this.buttonSpeaker.setOrigin(0.5, 0.5);
+       this.buttonSpeaker.setScale(1, 1);
+       Povin.place(this.buttonSpeaker, 0.9, 0.07);
+       Povin.setSpeakerTexture(this.buttonSpeaker);
 
         // Home button to return to the main menu
         this.buttonHome = this.add.image(0, 0, 'buttonHome').setInteractive();
-
         this.buttonHome.on('pointerdown', function () {
             Povin.actionOnClickHome({
                 target: this,
