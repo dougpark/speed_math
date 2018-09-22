@@ -98,7 +98,7 @@ var PMath = new Phaser.Class({
         this.buttonSpeaker.setOrigin(0.5, 0.5);
         this.buttonSpeaker.setScale(1, 1);
         Povin.place(this.buttonSpeaker, 0.9, 0.07);
-        Povin.setSpeakerTexture(this.buttonSpeaker);
+        Povin.setSpeakerFrame(this.buttonSpeaker);
 
         // Home button to return to the main menu
         this.buttonHome = this.add.image(0, 0, 'buttonHome').setInteractive();

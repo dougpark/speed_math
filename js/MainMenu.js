@@ -7,7 +7,7 @@
 **************************************************************************************/
 "use strict";
 
-// user defined options
+// game defined options
 var option = {};
 
 option.timeGoal = 3;
@@ -43,30 +43,26 @@ option.questionType = option.arithmeticType;
 // game UI settings
 var style = {};
 
-style.myFont = '18px VenusRising';
-style.titleFont = '19px VenusRising';
-style.goFont = '24px VenusRising';
+style.headerFont = '19px VenusRising';
+style.headerBackgroundH = '0xb92b27'; // #b92b27
+style.headerText = '#ffffff';
+style.headerGraphicH = '0xffffff'; //#ffffff
 
-//style.myFont = 'arial'
+style.bodyFont = '18px VenusRising';
+style.bodyBackgroundH = '0xffffff'; // #ffffff
+style.bodyBackground = '#ffffff';
+//style.bodyBackgroundHighlight = '0xe6e6e6'; // #e6e6e6
+style.bodyHeading = '#b92b27';
+style.bodyText = '#333333';
+style.bodyGraphicH = '0x2092ea'; //#2092ea
 
-style.backHeader = '0xb92b27'; // #b92b27
-style.textHeader = '#ffffff';
-style.textHeaderH = '0xffffff';
-style.backFooter = '0x333333'; // #333333
-style.textBackFooterH = '#ffffff'; //#ffffff
-style.textFooter = '#2092ea';
+style.footerFont = '24px VenusRising';
+style.footerBackgroundH = '0x333333'; // #333333
+style.footerTextBackground = '#ffffff'; //#ffffff
+style.footerText = '#2092ea';
 
-style.backColor = '0xffffff'; // #ffffff
-style.backColorH = '#ffffff';
-style.backHighLight = '0x2092ea'; // #e6e6e6
-style.headingColor = '#b92b27';
-style.textColor = '#333333';
 
-style.upDown = '0x2092ea'; //#2092ea
-
-// #2092ea
-// #e6e6e6
- class RoundButton extends Phaser.GameObjects.Container {
+class RoundButton extends Phaser.GameObjects.Container {
     constructor(config) {
         super(config.scene, 0, 0);
  
@@ -96,69 +92,78 @@ class MenuButton extends Phaser.GameObjects.Container {
     constructor(config) {
         super(config.scene, 0, 0);
             //var b2 = scene.add.rectangle(0, 0, 20, 20);
-            var b1 = config.scene.add.line(0, -10, 0, 0, 30, 0);
-            var b2 = config.scene.add.line(0, 0, 0, 0, 30, 0);
-            var b3 = config.scene.add.line(0, 10, 0, 0, 30, 0);
+            var b1 = config.scene.add.line(0, 0, 0, 0, 30, 0);
+            var b2 = config.scene.add.line(0, 0, 0, 10, 30, 10);
+            var b3 = config.scene.add.line(0, 0, 0, 20, 30, 20);
             b1.setStrokeStyle(1, config.style);
             b2.setStrokeStyle(1, config.style);
             b3.setStrokeStyle(1, config.style);
         
-        this.add([b1, b2, b3]);
-        this.setSize(40, 40);
-        this.setInteractive();
-        config.scene.add.existing(this);
+            this.add([b1, b2, b3]);
+            this.setSize(40, 40);
+            this.setInteractive();
+            config.scene.add.existing(this);
     }
 };
 
 class SpeakerButton extends Phaser.GameObjects.Container {
     constructor(config) {
         super(config.scene, 0, 0);
-        this.c = config;
         
-        if (!config) {config = this.c;}
         //var b2 = scene.add.rectangle(0, 0, 20, 20);
-        var b1 = config.scene.add.line(0, -10, 0, 0, 30, 0);
-        var b2 = config.scene.add.line(0, 0, 0, 30, 0, 0);
-        var b3 = config.scene.add.line(0, 10, 0, 0, 30, 0);
-        b1.setStrokeStyle(1, config.style);
-        b1.myFrame = 0;
-        b3.myFrame = 0;
-        b2.setStrokeStyle(1, config.style);
-        b3.setStrokeStyle(1, config.style);
+        var b1 = config.scene.add.line(8, 0, 0, 20, 20, 0, config.style);
+        b1.setLineWidth(2, 2);
+        b1.visFrame = 1;
 
-        this.add([b1, b2, b3]);
+        var b1a = config.scene.add.line(8, 0, 0, 0, 20, 20, config.style);
+        b1a.setLineWidth(2, 2);
+        b1a.visFrame = 1;
+
+        var b2 = config.scene.add.line(0, 0, 0, 0, 15, 0, config.style);
+        b2.setLineWidth(1, 9);
+        var b2c = config.scene.add.rectangle(-4, 1, 7, 7, config.style);
+        
+        var b2a = config.scene.add.arc(10, 0, 8, 270, 450, false);
+        b2a.setStrokeStyle(1, config.style);
+        
+        var b2b = config.scene.add.arc(14, 0, 10, 270, 450, false);
+        b2b.setStrokeStyle(1, config.style);
+         config.scene.tweens.add({
+             targets: [b2a,b2b],
+             scaleX: 1.2,
+             scaleY: 1,
+             yoyo: true,
+             repeat: -1,
+             ease: 'Sine.easeInOut'
+
+         });
+    
+        // add the graphicObjects to the container
+        this.add([b1, b1a, b2, b2a, b2b, b2c]);
         this.setSize(40, 40);
         this.setInteractive();
-        b2.visible = false;
-        b2.myFrame = 1;
+        
+        // add container to the scene
         config.scene.add.existing(this);
 
-    }
-
-    showFrame0() {
-        this.getAll('myFrame', 0).forEach(this.show);
-        this.getAll('myFrame', 1).forEach(this.hide);
-    }
-
-    show(item,index) {
-        item.visible = true;
+        // set initial frame to show
+        this.setFrame(0);
 
     }
-    hide(item,index) {
-        item.visible = false;
-    }
 
-    showFrame1() {
-        this.getAll('myFrame', 1).forEach(this.show);
-        this.getAll('myFrame', 0).forEach(this.hide);
-    }
-    
     setFrame (frame) { 
-        if (frame ==0) { 
-            this.showFrame0();   
-        } else {
-            this.showFrame1();
-        }
+        this.getAll().forEach(function(item) {
+            if (item.visFrame == frame) {
+                item.visible = true;
+            } else {
+                item.visible = false;
+            }
+            if (item.visFrame === undefined) {
+                item.visible = true;
+            }
+
+        },this);
+      
     }
 };
 
@@ -174,9 +179,8 @@ var MainMenu = new Phaser.Class({
         option.level += Povin.next; // increase the level from last game
         this.boundLevel();
 
-         game.ctx = this;
-
-        
+        // save scene context for callback functions
+        game.ctx = this;    
     },
 
     preload: function () {
@@ -187,32 +191,31 @@ var MainMenu = new Phaser.Class({
 
         this.input.keyboard.on('keydown_SPACE', function (event) {
 
-            game.ctx.nextState();
+            this.nextState();
 
-        });
+        },this);
 
         // background image
-        this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
-        this.background.alpha = 1;
+        // this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
+        // this.background.alpha = 1;
 
         // screen rectangle
-        this.graphics = this.add.graphics(0, 0);
-        this.graphics.clear();
-        this.graphics.lineStyle(4, 0x979595, 1);
-        this.graphics.strokeRect(0, 0, game.config.width, game.config.height);
+        // this.graphics = this.add.graphics(0, 0);
+        // this.graphics.clear();
+        // this.graphics.lineStyle(4, 0x979595, 1);
+        // this.graphics.strokeRect(0, 0, game.config.width, game.config.height);
 
-        // background colors
-        this.green = this.add.rectangle(0, 0, game.config.width, Povin.placeY(1), style.backColor).setOrigin(.5, 0);
-        Povin.place(this.green, 0.5, 0);
+        // background Tile
+        this.backTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(1), style.bodyBackgroundH).setOrigin(.5, 0);
+        Povin.place(this.backTile, 0.5, 0);
 
-        this.green = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.backHeader).setOrigin(.5, 0);
-        Povin.place(this.green, 0.5, 0);
+        // header tile
+        this.headerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.headerBackgroundH).setOrigin(.5, 0);
+        Povin.place(this.headerTile, 0.5, 0);
 
-        this.green = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.backFooter).setOrigin(.5, 0);
-        Povin.place(this.green, 0.5, 0.85);
-
-        
-       
+        // footer tile
+        this.footerTile = this.add.rectangle(0, 0, game.config.width, Povin.placeY(.15), style.footerBackgroundH).setOrigin(.5, 0);
+        Povin.place(this.footerTile, 0.5, 0.85);
 
         //  Title Text
         // this.title = this.add.sprite(0, 0, 'title');
@@ -220,19 +223,18 @@ var MainMenu = new Phaser.Class({
         // this.title.setScale(1, 1);
         // Povin.place(this.title, 0.5, 0.07);
 
-         this.tString = 'Povin Speed Math';
-         this.tText = this.add.text(0, 0, this.tString, {
-             font: style.titleFont,
-             fill: style.textHeader,
-             align: 'center'
-         });
-         this.tText.setOrigin(0.5, 0.5);
-         Povin.place(this.tText, 0.5, 0.07);
+        this.tText = this.add.text(0, 0, 'Povin Speed Math', {
+            font: style.headerFont,
+            fill: style.headerText,
+            align: 'center'
+        });
+        this.tText.setOrigin(0.5, 0.5);
+        Povin.place(this.tText, 0.5, 0.07);
 
         // Speaker button to start/stop the background music
         this.buttonSpeaker = new SpeakerButton({
             scene: this,
-            style: style.textHeaderH,
+            style: style.headerGraphicH,
         });
         this.buttonSpeaker.on('pointerdown', function () {
             Povin.actionOnClickSpeaker({
@@ -240,15 +242,13 @@ var MainMenu = new Phaser.Class({
                 ctx: game.ctx
             });
         });
-        //this.buttonSpeaker.setOrigin(0.5, 0.5);
-        this.buttonSpeaker.setScale(1, 1);
         Povin.place(this.buttonSpeaker, 0.9, 0.07);
-        Povin.setSpeakerTexture(this.buttonSpeaker);
+        Povin.setSpeakerFrame(this.buttonSpeaker);
 
         // Home button to return to the main menu
         this.buttonHome = new MenuButton({
             scene: this,
-            style: style.textHeaderH,
+            style: style.headerGraphicH,
         });
         
         this.buttonHome.on('pointerdown', function () {
@@ -257,13 +257,8 @@ var MainMenu = new Phaser.Class({
                 ctx: game.ctx
             });
         });
-        //this.buttonHome.setOrigin(0.5, 0.5);
-        this.buttonHome.nextState = 'MainMenu';
-        this.buttonHome.setScale(.8);
-        this.buttonHome.normScale=.8;
-        Povin.place(this.buttonHome, 0.07, 0.07);
-
-        
+        this.buttonHome.nextState = 'Scores';
+        Povin.place(this.buttonHome, 0.07, 0.055);
 
         // Go Button
         // this.buttonGo = this.add.image(0, 0, 'buttonGo').setInteractive();
@@ -274,9 +269,9 @@ var MainMenu = new Phaser.Class({
         // this.buttonGo.inputEnabled = true;
 
         this.buttonGo = this.add.text(0, 0, '      Go      ', {
-             font: style.goFont,
-             fill: style.textFooter,
-             backgroundColor: style.textBackFooterH,
+             font: style.footerFont,
+             fill: style.footerText,
+             backgroundColor: style.footerTextBackground,
              align: 'center'
          }).setInteractive();
          this.buttonGo.on('pointerdown', this.nextState, this);
@@ -288,82 +283,73 @@ var MainMenu = new Phaser.Class({
        
 
         //
-        // Arithmetic Heading
+        // Test Type Heading
         //
-        this.aString = 'Test Type';
-        this.aText = this.add.text(0, 0, this.aString, { font: style.myFont, fill: style.headingColor, align: 'center' });
-        this.aText.setOrigin(0.5, 0.5);
-        Povin.place(this.aText, 0.5, 0.25);
-        // Arithmetic Text
-        this.a2String = option.arithmeticArray[option.arithmeticType];
-        this.a2Text = this.add.text(0, 0, this.a2String, { font: style.myFont, fill: style.textColor, align: 'center' });
-        this.a2Text.setOrigin(0.5, 0.5);
-        Povin.place(this.a2Text, 0.5, 0.30);
-        // ArPlus
+        this.testTypeHeading = this.add.text(0, 0, 'Test Type', { font: style.bodyFont, fill: style.bodyHeading, align: 'center' });
+        this.testTypeHeading.setOrigin(0.5, 0.5);
+        Povin.place(this.testTypeHeading, 0.5, 0.25);
 
-        
+        // Test Type Text
+        this.testTypeString = option.arithmeticArray[option.arithmeticType];
+        this.testTypeText = this.add.text(0, 0, this.testTypeString, { font: style.bodyFont, fill: style.bodyText, align: 'center' });
+        this.testTypeText.setOrigin(0.5, 0.5);
+        Povin.place(this.testTypeText, 0.5, 0.30);
 
-        this.buttonArPlus = new RoundButton({scene:this, style:style.upDown,type:'plus'});
-
-        // this.buttonArPlus = this.add.container();
-        // this.buttonArPlus1 = this.add.arc(0, 0, 20, 0, 360, false);
-        // this.buttonArPlus1.setStrokeStyle(4, style.upDown);
-        // this.buttonArPlus2 = this.add.rectangle(0, 0, 10,10);
-        // this.buttonArPlus2.setStrokeStyle(1, style.upDown);
-        // this.buttonArPlus.add([this.buttonArPlus1, this.buttonArPlus2]);
-         //this.buttonArPlus.setSize(20,20);
-         //this.buttonArPlus.setInteractive();
-        
-
-
-
-        //this.buttonArPlus = this.add.image(0, 0, 'buttonPlus').setInteractive();
-        this.buttonArPlus.on('pointerdown', function () {
-            game.ctx.actionOnClickAr({
+        // Test Type Plus Button
+        this.buttonTestTypePlus = new RoundButton({
+            scene:this, 
+            style:style.bodyGraphicH,
+            type:'plus'
+        });
+        this.buttonTestTypePlus.on('pointerdown', function () {
+            game.ctx.actionOnClickTestType({
                 target: this,
                 ctx: game.ctx
             });
         });
-        this.buttonArPlus.direction = 1;
-        //this.buttonArPlus.setOrigin(0.5, 0.5);
-        //this.buttonArPlus.setScale(.8, .8);
-        Povin.place(this.buttonArPlus, 0.9, 0.30);
+        this.buttonTestTypePlus.direction = 1;
+        Povin.place(this.buttonTestTypePlus, 0.9, 0.30);
         
-        // ArMinus
-        this.buttonArMinus = new RoundButton({
+        // Test Type Minus Button
+        this.buttonTestTypeMinus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'minus'
         });
-        //this.buttonArMinus = this.add.image(0, 0, 'buttonMinus').setInteractive();
-        this.buttonArMinus.on('pointerdown', function () {
-            game.ctx.actionOnClickAr({
+        this.buttonTestTypeMinus.on('pointerdown', function () {
+            game.ctx.actionOnClickTestType({
                 target: this,
                 ctx: game.ctx
             });
         });
-        this.buttonArMinus.direction = -1;
-        //this.buttonArMinus.setOrigin(0.5, 0.5);
-        //this.buttonArPlus.setScale(.8, .8);
-        Povin.place(this.buttonArMinus, 0.1, 0.30);
+        this.buttonTestTypeMinus.direction = -1;
+        Povin.place(this.buttonTestTypeMinus, 0.1, 0.30);
         
         
         //
         // Factor Heading
         //
-        this.factorString = 'Factors';
-        this.factorText = this.add.text(0, 0, this.factorString, { font: style.myFont, fill: style.headingColor, align: 'center' });
-        this.factorText.setOrigin(0.5, 0.5);
-        Povin.place(this.factorText, 0.5, 0.55);
+        this.factorHeading = this.add.text(0, 0, 'Factors', { 
+            font: style.bodyFont, 
+            fill: style.bodyHeading, 
+            align: 'center' 
+        });
+        this.factorHeading.setOrigin(0.5, 0.5);
+        Povin.place(this.factorHeading, 0.5, 0.55);
         // Factor Text
-        this.factor2String = option.minFactor + " to "+ option.factor;
-        this.factor2Text = this.add.text(0, 0, this.factor2String, { font: style.myFont, fill: style.textColor, align: 'center' });
-        this.factor2Text.setOrigin(0.5, 0.5);
-        Povin.place(this.factor2Text, 0.5, 0.60);
-        // factorPlus
+        this.factorString = option.minFactor + " to "+ option.factor;
+        this.factorText = this.add.text(0, 0, this.factorString, { 
+            font: style.bodyFont, 
+            fill: style.bodyText, 
+            align: 'center' 
+        });
+        this.factorText.setOrigin(0.5, 0.5);
+        Povin.place(this.factorText, 0.5, 0.60);
+
+        // factor Plus Button
         this.buttonfactorPlus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'plus'
         });
         this.buttonfactorPlus.on('pointerdown', function () {
@@ -374,13 +360,12 @@ var MainMenu = new Phaser.Class({
         });
         this.buttonfactorPlus.type = 'max';
         this.buttonfactorPlus.direction = 1;
-        //this.buttonfactorPlus.setOrigin(0.5, 0.5);
         Povin.place(this.buttonfactorPlus, 0.9, 0.60);
         
-        // factorMinus
+        // factor Minus Button
         this.buttonfactorMinus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'minus'
         });;
         this.buttonfactorMinus.on('pointerdown', function () {
@@ -391,61 +376,65 @@ var MainMenu = new Phaser.Class({
         });
         this.buttonfactorMinus.type = 'max';
         this.buttonfactorMinus.direction = -1;
-        //this.buttonfactorMinus.setOrigin(0.5, 0.5);
         Povin.place(this.buttonfactorMinus, 0.75, 0.60);
        
-        // minFactorPlus
-        this.buttonminFactorPlus = new RoundButton({
+        // minFactor Plus Button
+        this.buttonMinFactorPlus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'plus'
         });;
-        this.buttonminFactorPlus.on('pointerdown', function () {
+        this.buttonMinFactorPlus.on('pointerdown', function () {
             game.ctx.actionOnClickFactor({
                 target: this,
                 ctx: game.ctx
             });
         });
-        this.buttonminFactorPlus.type = 'min';
-        this.buttonminFactorPlus.direction = 1;
-        //this.buttonminFactorPlus.setOrigin(0.5, 0.5);
-        Povin.place(this.buttonminFactorPlus, 0.25, 0.60);
+        this.buttonMinFactorPlus.type = 'min';
+        this.buttonMinFactorPlus.direction = 1;
+        Povin.place(this.buttonMinFactorPlus, 0.25, 0.60);
        
-        // minFactorMinus
-        this.buttonminFactorMinus = new RoundButton({
+        // minFactor Minus Button
+        this.buttonMinFactorMinus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'minus'
         });;
-        this.buttonminFactorMinus.on('pointerdown', function () {
+        this.buttonMinFactorMinus.on('pointerdown', function () {
              game.ctx.actionOnClickFactor({
                  target: this,
                  ctx: game.ctx
              });
          });
-        this.buttonminFactorMinus.type = 'min';
-        this.buttonminFactorMinus.direction = -1;
-        //this.buttonminFactorMinus.setOrigin(0.5, 0.5);
-        Povin.place(this.buttonminFactorMinus, 0.1, 0.60);
+        this.buttonMinFactorMinus.type = 'min';
+        this.buttonMinFactorMinus.direction = -1;
+        Povin.place(this.buttonMinFactorMinus, 0.1, 0.60);
         
 
         //
         // Level Heading
         //
-        this.levelString = 'Level';
-        this.levelText = this.add.text(0, 0, this.levelString, { font: style.myFont, fill: style.headingColor, align: 'center' });
-        this.levelText.setOrigin(0.5, 0.5);
-        Povin.place(this.levelText, 0.5, 0.40);
+        this.levelHeading = this.add.text(0, 0, 'Level', { 
+            font: style.bodyFont, 
+            fill: style.bodyHeading, 
+            align: 'center' 
+        });
+        this.levelHeading.setOrigin(0.5, 0.5);
+        Povin.place(this.levelHeading, 0.5, 0.40);
         // Level Text
-        this.level2String = option.level;
-        this.level2Text = this.add.text(0, 0, this.level2String, { font: style.myFont, fill: style.textColor, align: 'center' });
-        this.level2Text.setOrigin(0.5, 0.5);
-        Povin.place(this.level2Text, 0.5, 0.45);
+        this.levelString = option.level;
+        this.levelText = this.add.text(0, 0, this.levelString, { 
+            font: style.bodyFont, 
+            fill: style.bodyText, 
+            align: 'center' 
+        });
+        this.levelText.setOrigin(0.5, 0.5);
+        Povin.place(this.levelText, 0.5, 0.45);
 
-        // levelPlus
+        // level Plus Button
         this.buttonlevelPlus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'plus'
         });
         this.buttonlevelPlus.on('pointerdown', function () {
@@ -455,13 +444,12 @@ var MainMenu = new Phaser.Class({
             });
         });
         this.buttonlevelPlus.direction = 1;
-        //this.buttonlevelPlus.setOrigin(0.5, 0.5);
         Povin.place(this.buttonlevelPlus, 0.9, 0.45);
        
-        // levelMinus
+        // level Minus Button
         this.buttonlevelMinus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'minus'
         });;
         this.buttonlevelMinus.on('pointerdown', function () {
@@ -471,39 +459,38 @@ var MainMenu = new Phaser.Class({
             });
         });
         this.buttonlevelMinus.direction = -1;
-        //this.buttonlevelMinus.setOrigin(0.5, 0.5);
         Povin.place(this.buttonlevelMinus, 0.1, 0.45);
        
         //
         // Time Goal Heading
         //
-        this.tgString = 'Time Goal';
-        this.tgText = this.add.text(0, 0, this.tgString, { font: style.myFont, fill: style.headingColor, align: 'center' });
-        this.tgText.setOrigin(0.5, 0.5);
-        Povin.place(this.tgText, 0.5, 0.70);
+        this.tgHeading = this.add.text(0, 0, 'Time Goal', { font: style.bodyFont, fill: style.bodyHeading, align: 'center' });
+        this.tgHeading.setOrigin(0.5, 0.5);
+        Povin.place(this.tgHeading, 0.5, 0.70);
         // Time Goal Text
-        this.tg2String = option.timeGoalArray[option.timeGoal];
-        this.tg2Text = this.add.text(0, 0, this.tg2String, { font: style.myFont, fill: style.textColor, align: 'center' });
-        this.tg2Text.setOrigin(0.5, 0.5);
-        Povin.place(this.tg2Text, 0.5, 0.75);
+        this.tgString = option.timeGoalArray[option.timeGoal];
+        this.tgText = this.add.text(0, 0, this.tgString, { font: style.bodyFont, fill: style.bodyText, align: 'center' });
+        this.tgText.setOrigin(0.5, 0.5);
+        Povin.place(this.tgText, 0.5, 0.75);
 
-        // TgPlus
+        // Tg Plus Button
         this.buttonTgPlus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'plus'
         });
         this.buttonTgPlus.on('pointerdown', function () {
-            game.ctx.actionOnClickTg({target:this, ctx:game.ctx});
+            game.ctx.actionOnClickTg({
+                target:this, 
+                ctx:game.ctx});
         });
         this.buttonTgPlus.direction = 1;
-        //this.buttonTgPlus.setOrigin(0.5, 0.5);
         Povin.place(this.buttonTgPlus, 0.9, 0.75);
 
-        // TgMinus
+        // Tg Minus Button
         this.buttonTgMinus = new RoundButton({
             scene: this,
-            style: style.upDown,
+            style: style.bodyGraphicH,
             type: 'minus'
         });;
         this.buttonTgMinus.on('pointerdown', function () {
@@ -513,11 +500,11 @@ var MainMenu = new Phaser.Class({
              });
          });
         this.buttonTgMinus.direction = -1;
-        //this.buttonTgMinus.setOrigin(0.5, 0.5);
         Povin.place(this.buttonTgMinus, 0.1, 0.75);
         
-
-        // for a specific interactive button
+        //
+        // For a specific interactive button
+        //
         // this.buttonTgMinus.on('pointerover', function (pointer) {
         //     game.ctx.tgOver({pointer:pointer, target:this, ctx:game.ctx});
         // });
@@ -533,10 +520,11 @@ var MainMenu = new Phaser.Class({
 
         // for all interactive objects
         this.input.on('gameobjectdown', this.onObjectDown);
-        this.input.on('gameobjectup', this.onObjectUp);
+        //this.input.on('gameobjectup', this.onObjectUp);
         this.input.on('gameobjectover', this.onObjectOver);
         this.input.on('gameobjectout', this.onObjectOut);
 
+        // Animate the invader
         var config = {
             key: 'fly',
             frames: this.anims.generateFrameNumbers('invader', {
@@ -555,6 +543,9 @@ var MainMenu = new Phaser.Class({
 
     }, // end create:
 
+    //
+    // for all interactive buttons
+    //
     onObjectDown: function (pointer, target) {    
         game.ctx.tweens.add({
             targets: target,
@@ -563,6 +554,14 @@ var MainMenu = new Phaser.Class({
             ease: 'Bounce.easeOut',
             duration: 100
         });
+         game.ctx.tweens.add({
+             targets: target,
+             scaleX: (target.normScale ? target.normScale : 1),
+             scaleY: (target.normScale ? target.normScale : 1),
+             ease: 'Sine.easeInOut',
+             delay: 100,
+             duration: 100
+         });
     },
     onObjectUp: function (pointer, target) {
         game.ctx.tweens.add({
@@ -594,46 +593,9 @@ var MainMenu = new Phaser.Class({
        /// target.setTint(0xffffff);
     },
 
-    tgDown: function (config) {
-        config.ctx.tweens.add({
-            targets: config.target,
-            scaleX: 2,
-            scaleY: 2,
-            ease: 'Bounce.easeOut',
-            duration: 100
-        });
-    },
-    tgUp: function (config) {
-        config.ctx.tweens.add({
-            targets: config.target,
-            scaleX: 1,
-            scaleY: 1,
-            ease: 'Sine.easeInOut',
-            duration: 100
-        });
-        target.angle = 0;
-    },
+    
 
-    tgOver: function (config) {
-         config.ctx.tweens.add({
-             targets: config.target,
-             scaleX: 1.4,
-             scaleY: 1.4,
-             ease: 'Sine.easeInOut',
-             duration: 100
-         });
-    },
-    tgOut: function (config) {
-        config.ctx.tweens.add({
-            targets: config.target,
-            scaleX: 1,
-            scaleY: 1,
-            ease: 'Sine.easeInOut',
-            duration: 100
-        });
-    },
-
-    actionOnClickAr: function (config) {
+    actionOnClickTestType: function (config) {
         option.arithmeticType += config.target.direction;
         if (option.arithmeticType > 4) {
             option.arithmeticType = 1;
@@ -641,8 +603,7 @@ var MainMenu = new Phaser.Class({
         if (option.arithmeticType < 1) {
             option.arithmeticType = 4;
         }
-        config.ctx.a2Text.text = option.arithmeticArray[option.arithmeticType];
-
+        config.ctx.testTypeText.text = option.arithmeticArray[option.arithmeticType];
     },
 
     actionOnClickFactor: function (config) {
@@ -664,10 +625,10 @@ var MainMenu = new Phaser.Class({
                 option.minFactor = option.factor;
             }
         }
-        config.ctx.factor2Text.text = option.minFactor + " to " + option.factor;
-
+        config.ctx.factorText.text = option.minFactor + " to " + option.factor;
     },
 
+    // used by Factor min and max buttons
     boundLevel: function() {
         if (option.level > 15) {
             option.level = 1;
@@ -681,7 +642,7 @@ var MainMenu = new Phaser.Class({
     actionOnClickLevel: function (config) {
         option.level += config.target.direction;
         config.ctx.boundLevel();
-        config.ctx.level2Text.text = option.level;
+        config.ctx.levelText.text = option.level;
 
     },
 
@@ -693,8 +654,7 @@ var MainMenu = new Phaser.Class({
         if (option.timeGoal < 1) {
             option.timeGoal = 5;
         }
-        config.ctx.tg2Text.text = option.timeGoalArray[option.timeGoal];
-
+        config.ctx.tgText.text = option.timeGoalArray[option.timeGoal];
     },
 
 

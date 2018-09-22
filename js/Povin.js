@@ -135,7 +135,7 @@ var Povin = {
     // Action when click on the speaker button
     actionOnClickSpeaker: function (config) {
         Povin.SFXToggle();
-        Povin.setSpeakerTexture(config.target);
+        Povin.setSpeakerFrame(config.target);
 
     },
 
@@ -147,17 +147,12 @@ var Povin = {
         }
     },
 
-    setSpeakerTexture(target) {
+    setSpeakerFrame(target) {
         if (Povin.SFXStatus == true) {
             target.setFrame(0);
-            //target.loadTexture('buttonSpeaker');
-
         } else {
             target.setFrame(1);
-            //target.loadTexture('buttonSpeakerOff');
-
         }
-
     },
 
 
