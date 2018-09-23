@@ -30,9 +30,9 @@ option.getTypeSt = function (id=option.arithmeticType) {
     return option.arithmeticArray[id];
 };
 
-option.level = 1;
-option.factor = 1;
-option.minFactor = 1;
+option.level = 5;
+option.factor = 10;
+option.minFactor = 2;
 
 option.buzzer = option.getTimeGoal()*1000;
 option.id = option.getPlayerId() + '.';
