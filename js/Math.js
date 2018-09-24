@@ -100,7 +100,7 @@ var PMath = new Phaser.Class({
             font: style.headerFont,
             fill: style.headerText,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.titleHeading.setOrigin(0.5, 0.5);
         Povin.place(this.titleHeading, 0.5, 0.07);
 
@@ -164,16 +164,19 @@ var PMath = new Phaser.Class({
         //this.input.on('gameobjectup', this.onObjectUp);
         this.input.on('gameobjectover', this.onObjectOver);
         this.input.on('gameobjectout', this.onObjectOut);
-   
-        //this.anims.create(config);
-        this.invader = this.add.sprite(0, 0, 'invader').play('fly');
+
+        // welcome invader
+        this.invader = this.add.sprite(0, 0, 'invader').play('fly').setScale(1 / zoom);
         this.invader.setOrigin(0.5, 0.5);
-        Povin.place(this.invader, .2, .81);
+        Povin.place(this.invader, .5, .18);
+   
+        // Time invader
+        this.timeInvader = this.add.sprite(0, 0, 'invader').play('fly').setScale(1 / zoom);
+        this.timeInvader.setOrigin(0.5, 0.5);
+        Povin.place(this.timeInvader, .2, .81);
         
-        // this.invaderTween = this.tweens.add(this.invader).to({ x: Povin.placeX(.8), y: Povin.placeY(.95) },
-        //     option.buzzer, Phaser.Easing.Quadratic.InOut, true, 0, 1000, true);
         game.ctx.tweens.add({
-            targets: this.invader,
+            targets: this.timeInvader,
             x: Povin.placeX(.8),
             y: Povin.placeY(.81),
             ease: 'Phaser.Math.Easing.Linear',
@@ -182,19 +185,10 @@ var PMath = new Phaser.Class({
             duration: option.buzzer
         });
         
-        // invader 2
-        this.invader2 = this.add.sprite(0, 0, 'invader').play('fly');
-        this.invader2.setOrigin(0.5, 0.5);
-        Povin.place(this.invader2, .5, .18);
+        
 
         // One Button
-        // this.button1 = game.add.button(0, 0, 'buttonAnswer', this.actionOnClick1, this, 1, 0, 0);
-        // this.button1.setOrigin(0.5, 0.5);
-        // this.button1.scale.setTo(1, 1);
-        // Povin.place(this.button1, 0.3, 0.67);
-        // this.button1.inputEnabled = true;
-        //this.button1 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
-        this.button1 = new RoundButton({
+         this.button1 = new RoundButton({
             scene: this,
             style: style.bodyGraphicH,
             type: 'select'
@@ -206,19 +200,10 @@ var PMath = new Phaser.Class({
             });
         });
         this.button1.inputEnabled = true;
-        //this.button1.setOrigin(0.5, 0.5);
         Povin.place(this.button1, 0.3, 0.67);
     
         // Two Button
-        // this.button2 = game.add.button(0, 0, 'buttonAnswer', this.actionOnClick2, this, 1, 0, 0);
-        // this.button2.anchor.setTo(0.5, 0.5);
-        // this.button2.scale.setTo(1, 1);
-        // Povin.place(this.button2, 0.5, 0.67);
-        // this.button2.inputEnabled = true;
-        // this.button2.events.onInputDown.add(this.onInputDown, this);
-        // this.button2.events.onInputUp.add(this.onInputUp, this);
-        //this.button2 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
-        this.button2 = new RoundButton({
+         this.button2 = new RoundButton({
             scene: this,
             style: style.bodyGraphicH,
             type: 'select'
@@ -230,19 +215,10 @@ var PMath = new Phaser.Class({
             });
         });
         this.button2.inputEnabled = true;
-        //this.button2.setOrigin(0.5, 0.5);
         Povin.place(this.button2, 0.5, 0.67);
 
         // Three Button
-        // this.button3 = game.add.button(0, 0, 'buttonAnswer', this.actionOnClick3, this, 1, 0, 0);
-        // this.button3.anchor.setTo(0.5, 0.5);
-        // this.button3.scale.setTo(1, 1);
-        // Povin.place(this.button3, 0.7, 0.67);
-        // this.button3.inputEnabled = true;
-        // this.button3.events.onInputDown.add(this.onInputDown, this);
-        // this.button3.events.onInputUp.add(this.onInputUp, this);
-        //this.button3 = this.add.image(0, 0, 'buttonAnswer').setInteractive();
-        this.button3 = new RoundButton({
+      this.button3 = new RoundButton({
             scene: this,
             style: style.bodyGraphicH,
             type: 'select'
@@ -254,40 +230,13 @@ var PMath = new Phaser.Class({
             });
         });
         this.button3.inputEnabled = true;
-        //this.button3.setOrigin(0.5, 0.5);
         Povin.place(this.button3, 0.7, 0.67);
         
         // Disable until Go
         this.button1.inputEnabled = false;
         this.button2.inputEnabled = false;
         this.button3.inputEnabled = false;
-
-        // Go Button
-        // this.buttonGo = game.add.button(0, 0, 'buttonGo', this.actionOnClickGo, this, 2, 2, 2);
-        // this.buttonGo.anchor.setTo(0.5, 0.5);
-        // this.buttonGo.scale.setTo(1, 1);
-        // Povin.place(this.buttonGo, 0.5, 0.85);
-        // this.buttonGo.inputEnabled = true;
-        // this.buttonGo.events.onInputDown.add(this.onInputDown, this);
-        // this.buttonGo.events.onInputUp.add(this.onInputUp, this);
-
-        // this.buttonGo = this.add.image(0, 0, 'buttonGo').setInteractive();
-        // this.buttonGo.on('pointerdown', function () {
-        //     game.ctx.actionOnClickGo({
-        //         target: this,
-        //         ctx: game.ctx
-        //     });
-        // });
-        // this.buttonGo.inputEnabled = true;
-        // this.buttonGo.setOrigin(0.5, 0.5);
-        // Povin.place(this.buttonGo, 0.5, 0.85);
-        
-        //  title Text
-        // this.title = this.add.sprite(0, 0, 'title');
-        // this.title.setOrigin(0.5, 0.5);
-        // this.title.setScale(1, 1);
-        // Povin.place(this.title, 0.5, 0.07);
-  
+ 
         //  Question Text
         this.qString = ' Press Go \n to Start ';
         this.qText = this.add.text(0, 0, this.qString, { 
@@ -295,7 +244,7 @@ var PMath = new Phaser.Class({
             fill: style.bodyBackground, //'#ebebeb', 
             //backgroundColor: style.bodyText, // new
             align: 'center' 
-        });
+        }).setScale(1/zoom);
         this.qText.setOrigin(0.5,0.5);
         Povin.place(this.qText, 0.5, 0.47);
 
@@ -305,7 +254,8 @@ var PMath = new Phaser.Class({
             font: '24px ' + this.myFont, 
             fill: style.bodyText, //'#ebebeb',
             //backgroundColor: style.bodyText, // new
-            align: 'center' });
+            align: 'center'
+            }).setScale(1 / zoom);
         this.sText.setOrigin(0.5, 0.5);
         Povin.place(this.sText, 0.5, 0.37);
 
@@ -316,7 +266,7 @@ var PMath = new Phaser.Class({
             fill: style.bodyText, //'#ebebeb', 
             //backgroundColor: style.bodyText, // new
             align: 'center' 
-        });
+        }).setScale(1 / zoom);
         this.qRText.setOrigin(0.5, 0.5);
         Povin.place(this.qRText, 0.5, 0.760);
 
@@ -326,7 +276,8 @@ var PMath = new Phaser.Class({
             font: '24px ' + this.myFont, 
             fill: style.bodyBackground, //'#ebebeb', 
             backgroundColor: style.bodyHeading, //'#ad0000', // new
-            align: 'center' });
+            align: 'center'
+            }).setScale(1 / zoom);
         this.qWText.setOrigin(0.5, 0.5);
         Povin.place(this.qWText, 0.5, 0.760);
 
@@ -336,7 +287,7 @@ var PMath = new Phaser.Class({
                     font: style.bodyFont,
                     fill: style.bodyText,
                     align: 'center'
-                });
+                }).setScale(1 / zoom);
         this.a1Text.setOrigin(0.5, 0.5);
         Povin.place(this.a1Text, 0.3, 0.6);
 
@@ -346,7 +297,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.a2Text.setOrigin(0.5, 0.5);
         Povin.place(this.a2Text, 0.5, 0.6);
 
@@ -356,7 +307,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.a3Text.setOrigin(0.5, 0.5);
         Povin.place(this.a3Text, 0.7, 0.6);
 
@@ -366,7 +317,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyHeading,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.cText.setOrigin(0.5, 0.5);
         Povin.place(this.cText, 0.2, 0.24);
         // Level Text
@@ -375,7 +326,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.c2Text.setOrigin(0.5, 0.5);
         Povin.place(this.c2Text, 0.2, 0.3);
 
@@ -385,7 +336,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyHeading,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.rText.setOrigin(0.5, 0.5);
         Povin.place(this.rText, 0.8, 0.24);
         // Right Count Text
@@ -394,7 +345,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.r2Text.setOrigin(0.5, 0.5);
         Povin.place(this.r2Text, 0.8, 0.3);
 
@@ -404,7 +355,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyHeading,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.tHText.setOrigin(0.5, 0.5);
         Povin.place(this.tHText, 0.5, 0.24);
         // Timer Text
@@ -413,7 +364,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
         this.timerText.setOrigin(0.5, 0.5);
         Povin.place(this.timerText, 0.5, 0.3);
 
@@ -902,71 +853,9 @@ var PMath = new Phaser.Class({
         }
 
     },
-
-    onInputDown: function (target) {
-        target.sx = target.scale.x;
-        target.sy = target.scale.y;
-        game.add.tween(target.scale).to({
-            x: target.sx*.8,
-            y: target.sy*.8
-        }, 100, Phaser.Easing.Cubic.Out, true);
-    },
-
-    onInputUp: function (target) {
-        game.add.tween(target.scale).to({
-            x: target.sx,
-            y: target.sy
-        }, 100, Phaser.Easing.Cubic.Out, true);
-    },
     
     nextState: function() {
         this.scene.start('Scores', true, false); // go to Scores
     },
-
-    
-    
-
-    scaleAt: function(n) {
-        //scale n based on original-scale and current display scale
-        
-        n = n * (this.game.width / 400);
-
-        return n;
-
-    },
-
-
-
-    one: function () {
-        //  Top Center
-        this.tString = 'top center ';
-        this.tText = game.add.text(0,0, this.tString, { font: '16px ' + this.myFont, fill: '#0099ff', align: 'center' });
-        this.tText.anchor.setTo(0.5, 0.5);
-        Povin.place(this.tText, 0.5, 0.1);
-        
-
-        //  Bottom Center
-        this.tString2 = 'bottom center ';
-        this.tText2 = game.add.text(0,0, this.tString2, { font: '16px ' + this.myFont, fill: '#0099ff', align: 'center' });
-        this.tText2.anchor.setTo(0.5, 0.5);
-        Povin.place(this.tText2, 0.5, 0.9);
-        
-
-        //  Left Center
-        this.tString3 = 'left center ';
-        this.tText3 = game.add.text(0,0, this.tString3, { font: '16px ' + this.myFont, fill: '#0099ff', align: 'center' });
-        this.tText3.anchor.setTo(0.5, 0.5);
-        Povin.place(this.tText3, 0.1, 0.5);
-        
-
-        //  right Center
-        this.tString4 = 'right center ';
-        this.tText4 = game.add.text(0,0, this.tString4, { font: '16px ' + this.myFont, fill: '#0099ff', align: 'center' });
-        this.tText4.anchor.setTo(0.5, 0.5);
-        Povin.place(this.tText4, 0.9, 0.5);
-        
-        
-
-    },
-
+  
 });

@@ -18,7 +18,7 @@ var Logo = new Phaser.Class({
     create: function () {
         this.logo = this.add.sprite(10, 5, "logo").setOrigin(0.5, 0.5);
        
-        this.logo.setScale(0.5);
+        this.logo.setScale(0.5 * 1 / zoom);
         //this.logo.anchor.setTo(0.5, 0.5);
         Povin.place(this.logo, 0.5, .5)  
     },

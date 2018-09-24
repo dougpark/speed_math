@@ -6,36 +6,38 @@
 * @date 2018-09-06
 **************************************************************************************/
 "use strict";
+/*
+    iphone device resolutions                                     
+                                                    device
+                                         landscape  pixel
+    device          points      ratio    ratio      ratio   pixels      ppi
 
-/* iPhone screen points and ratio
-    Xs Max  414x896     0.4621
-    Xr      414x896
-    X,Xs    375x812     0.4618
-    8+      414x736     0.5625
-    8       375x667     0.5622
-    5,SE    320x568     0.5634
+    Xs Max          414x896     0.4621   2.1643     x3 =    1242x2688   458
+    Xr              414x896     0.4621   2.1643     x2 =    828x1792    326
+    X,Xs            375x812     0.4618   2.1653     x3 =    1125x2436   458
+    8+              414x736     0.5625   1.7778     x3 =    1242x2208   401
+    8               375x667     0.5622   1.7787     x2 =    750x1334    326
+    5,SE            320x568     0.5634   1.775      x2 =    640x1136    326
+
+    ipad mini       768x1024    0.75     1.3333     x2 =    1536x2048   326 
+    ipad                        0.75                        1536x2048
+    ipad pro 10.5               0.75                        1668x2224   264
+    ipad pro 12.9               0.75                        2048x2732   264
+
+    source: https: //www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
 
 */
 
-// fit all types of mobile phones and limit size on desktop
-var getWidth = function () {
-    var width = window.innerWidth
-        || document.documentElement.clientWidth
-        || document.body.clientWidth;
-    //width = width * window.devicePixelRatio;
-    if (width > 414) { width = 414 }
-    return width;
-}
+var height= window.innerHeight * window.devicePixelRatio; // set game height by multiplying window height with devicePixelRatio
+var width = window.innerWidth * window.devicePixelRatio; // set game width by multiplying window width with devicePixelRatio
+var zoom = 1 / window.devicePixelRatio; // set zoom
 
-var getHeight = function () {
-    var height = window.innerHeight
-        || document.documentElement.clientHeight
-        || document.body.clientHeight;
-    //height = height * window.devicePixelRatio;
-    if (height > 736) { height = 736 }
-    return height;
+// try to work with desktops and landscape phones
+if (width / height > .7) { // compromize solution
+    width = height * .56;
+    zoom = width/height;
 }
- 
+console.log('width='+width+' height='+height+' zoom='+zoom);
 
 var game;
 
@@ -48,8 +50,9 @@ var GameOptions = {
 window.onload = function () {
     var gameConfig = {
         type: Phaser.AUTO,
-        width: getWidth(),
-        height: getHeight(),
+        width: width, 
+        height: height, 
+        zoom: zoom,
         backgroundColor: 0x000000,
         physics: {
             default: 'arcade',
@@ -79,6 +82,8 @@ var Boot = new Phaser.Class({
             },
 
     init: function () {
+        this.cameras.main.setRoundPixels(true);
+
         // initialize the Povin object
         Povin.game = game;
 

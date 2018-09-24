@@ -68,7 +68,7 @@ class TextButton extends Phaser.GameObjects.Container {
     constructor(config) { // {scene, width, height, text, textFont, textStyle, 0xbackgroundColor}
         super(config.scene, 0, 0);
 
-        var b1 = config.scene.add.rectangle(0, 0, config.width, config.height, config.backgroundColor);
+        var b1 = config.scene.add.rectangle(0, 0, config.width*zoom, config.height*zoom, config.backgroundColor);
         var b2 = config.scene.add.text(0, 0, config.text, {
             font: config.textFont,
             fill: config.textStyle,
@@ -77,8 +77,10 @@ class TextButton extends Phaser.GameObjects.Container {
         b2.setOrigin(.5,.5);
            
         this.add([b1, b2]);
-        this.setSize(config.width, config.height);
+        this.setSize(config.width*zoom, config.height*zoom);
         this.setInteractive();
+        this.setScale(1 / zoom);
+        this.normScale = this.scaleX;
         config.scene.add.existing(this);
     }
 };
@@ -113,6 +115,8 @@ class RoundButton extends Phaser.GameObjects.Container {
         this.setSize(40,40);
         this.setInteractive();
         config.scene.add.existing(this);
+        this.setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.setFrame(0);
     }
 
@@ -147,6 +151,8 @@ class MenuButton extends Phaser.GameObjects.Container {
             this.setSize(40, 40);
             this.setInteractive();
             config.scene.add.existing(this);
+            this.setScale(1/zoom);
+            this.normScale = this.scaleX;
 
             
     }
@@ -188,6 +194,8 @@ class SpeakerButton extends Phaser.GameObjects.Container {
         this.add([b1, b1a, b2, b2a, b2b, b2c]);
         this.setSize(40, 40);
         this.setInteractive();
+        this.setScale(1 / zoom);
+        this.normScale = this.scaleX;
         
         // add container to the scene
         config.scene.add.existing(this);
@@ -222,6 +230,7 @@ var MainMenu = new Phaser.Class({
             },
 
     init: function () {
+        
         option.level += Povin.next; // increase the level from last game
         this.boundLevel();
 
@@ -256,8 +265,10 @@ var MainMenu = new Phaser.Class({
             font: style.headerFont,
             fill: style.headerText,
             align: 'center'
-        });
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.titleHeading.setOrigin(0.5, 0.5);
+        //this.titleHeading.setScale(1/zoom);
         Povin.place(this.titleHeading, 0.5, 0.07);
 
         // Speaker button to start/stop the background music
@@ -283,8 +294,8 @@ var MainMenu = new Phaser.Class({
             Povin.actionOnClickHome({
                 target: this,
                 ctx: game.ctx
-            });
-        });
+            }); 
+        }); 
         this.buttonHome.nextState = 'Scores';
         Povin.place(this.buttonHome, 0.07, 0.055);
 
@@ -320,7 +331,8 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyHeading, 
             align: 'center' 
-        });
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.testTypeHeading.setOrigin(0.5, 0.5);
         Povin.place(this.testTypeHeading, 0.5, 0.25);
 
@@ -330,7 +342,8 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyText, 
             align: 'center' 
-        });
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.testTypeText.setOrigin(0.5, 0.5);
         Povin.place(this.testTypeText, 0.5, 0.30);
 
@@ -372,7 +385,8 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyHeading, 
             align: 'center' 
-        });
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.factorHeading.setOrigin(0.5, 0.5);
         Povin.place(this.factorHeading, 0.5, 0.55);
         // Factor Text
@@ -381,7 +395,8 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyText, 
             align: 'center' 
-        });
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.factorText.setOrigin(0.5, 0.5);
         Povin.place(this.factorText, 0.5, 0.60);
 
@@ -457,7 +472,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyHeading, 
             align: 'center' 
-        });
+        }).setScale(1 / zoom);
         this.levelHeading.setOrigin(0.5, 0.5);
         Povin.place(this.levelHeading, 0.5, 0.40);
         // Level Text
@@ -466,7 +481,8 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyText, 
             align: 'center' 
-        });
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.levelText.setOrigin(0.5, 0.5);
         Povin.place(this.levelText, 0.5, 0.45);
 
@@ -503,12 +519,22 @@ var MainMenu = new Phaser.Class({
         //
         // Time Goal Heading
         //
-        this.tgHeading = this.add.text(0, 0, 'Time Goal', { font: style.bodyFont, fill: style.bodyHeading, align: 'center' });
+        this.tgHeading = this.add.text(0, 0, 'Time Goal', {
+            font: style.bodyFont,
+            fill: style.bodyHeading,
+            align: 'center'
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.tgHeading.setOrigin(0.5, 0.5);
         Povin.place(this.tgHeading, 0.5, 0.70);
         // Time Goal Text
         this.tgString = option.timeGoalArray[option.timeGoal];
-        this.tgText = this.add.text(0, 0, this.tgString, { font: style.bodyFont, fill: style.bodyText, align: 'center' });
+        this.tgText = this.add.text(0, 0, this.tgString, {
+            font: style.bodyFont,
+            fill: style.bodyText,
+            align: 'center'
+        }).setScale(1 / zoom);
+        this.normScale = this.scaleX;
         this.tgText.setOrigin(0.5, 0.5);
         Povin.place(this.tgText, 0.5, 0.75);
 
@@ -575,6 +601,8 @@ var MainMenu = new Phaser.Class({
 
         this.anims.create(config);
         this.invader = this.add.sprite(400, 100, 'invader').play('fly');
+        this.invader.setScale(1/zoom);
+        this.normScale = this.scaleX;
         this.invader.setOrigin(0.5, 0.5);
         Povin.place(this.invader, .5, .18);
 
@@ -588,28 +616,28 @@ var MainMenu = new Phaser.Class({
     onObjectDown: function (pointer, target) {    
         game.ctx.tweens.add({
             targets: target,
-            scaleX: (target.normScale ? target.normScale*.8 : .8),
-            scaleY: (target.normScale ? target.normScale*.8: .8),
+            scaleX: (target.normScale ? target.normScale*.8 : target.scaleX*.8),
+            scaleY: (target.normScale ? target.normScale*.8: target.scaleY*.8),
             ease: 'Bounce.easeOut',
             duration: 100
         });
          game.ctx.tweens.add({
              targets: target,
-             scaleX: (target.normScale ? target.normScale : 1),
-             scaleY: (target.normScale ? target.normScale : 1),
+             scaleX: (target.normScale ? target.normScale : target.scaleX * 1.25),
+             scaleY: (target.normScale ? target.normScale : target.scaleY * 1.25),
              ease: 'Sine.easeInOut',
              delay: 100,
              duration: 100
          });
     },
     onObjectUp: function (pointer, target) {
-        game.ctx.tweens.add({
-            targets: target,
-            scaleX: (target.normScale ? target.normScale : 1),
-            scaleY: (target.normScale ? target.normScale : 1),
-            ease: 'Sine.easeInOut',
-            duration: 100
-        });
+        // game.ctx.tweens.add({
+        //     targets: target,
+        //     scaleX: (target.normScale ? target.normScale : target.scaleX*1.25),
+        //     scaleY: (target.normScale ? target.normScale : target.scaleY*1.25),
+        //     ease: 'Sine.easeInOut',
+        //     duration: 100
+        // });
     },
     onObjectOver: function (pointer, target) {
         // game.ctx.tweens.add({
@@ -622,13 +650,13 @@ var MainMenu = new Phaser.Class({
         ///target.setTint(0xeb0000);
     },
     onObjectOut: function (pointer, target) {
-        game.ctx.tweens.add({
-            targets: target,
-            scaleX: (target.normScale ? target.normScale : 1),
-            scaleY: (target.normScale ? target.normScale : 1),
-            ease: 'Sine.easeInOut',
-            duration: 100
-        });
+        // game.ctx.tweens.add({
+        //     targets: target,
+        //     scaleX: (target.normScale ? target.normScale : target.scaleX*1.2)5,
+        //     scaleY: (target.normScale ? target.normScale : target.scaleY*1.25),
+        //     ease: 'Sine.easeInOut',
+        //     duration: 100
+        // });
        /// target.setTint(0xffffff);
     },
 
