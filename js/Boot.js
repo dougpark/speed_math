@@ -171,17 +171,8 @@ var Boot = new Phaser.Class({
     },
 
     create: function () {
-        //this.addGameScenes();
+        
         this.nextScene();
-    },
-
-    addGameScenes: function () {
-        // these states are required before the primary state loader in Preloader
-        game.state.add('CheckOrientation', BasicGame.CheckOrientation);
-        game.state.add('Logo', BasicGame.Logo);
-        game.state.add('MainMenu', BasicGame.MainMenu);
-        game.state.add('Scores', BasicGame.Scores);
-        game.state.add('Math', BasicGame.Math);
     },
 
     nextScene: function() {
