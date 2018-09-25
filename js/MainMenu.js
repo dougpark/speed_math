@@ -1,5 +1,5 @@
 /**************************************************************************************
-* MainMenu State (Povin Speed Math)
+* MainMenu Scene (Povin Speed Math)
 * @author Doug Park
 * @version v1.0
 * @desc Display Menu Options
@@ -79,7 +79,7 @@ class TextButton extends Phaser.GameObjects.Container {
         this.add([b1, b2]);
         this.setSize(config.width*zoom, config.height*zoom);
         this.setInteractive();
-        this.setScale(1 / zoom);
+        this.setScale(deviceScale);
         this.normScale = this.scaleX;
         config.scene.add.existing(this);
     }
@@ -115,7 +115,7 @@ class RoundButton extends Phaser.GameObjects.Container {
         this.setSize(40,40);
         this.setInteractive();
         config.scene.add.existing(this);
-        this.setScale(1 / zoom);
+        this.setScale(deviceScale);
         this.normScale = this.scaleX;
         this.setFrame(0);
     }
@@ -151,7 +151,7 @@ class MenuButton extends Phaser.GameObjects.Container {
             this.setSize(40, 40);
             this.setInteractive();
             config.scene.add.existing(this);
-            this.setScale(1/zoom);
+            this.setScale(deviceScale);
             this.normScale = this.scaleX;
 
             
@@ -194,7 +194,7 @@ class SpeakerButton extends Phaser.GameObjects.Container {
         this.add([b1, b1a, b2, b2a, b2b, b2c]);
         this.setSize(40, 40);
         this.setInteractive();
-        this.setScale(1 / zoom);
+        this.setScale(deviceScale);
         this.normScale = this.scaleX;
         
         // add container to the scene
@@ -245,7 +245,7 @@ var MainMenu = new Phaser.Class({
     create: function () {
 
         this.input.keyboard.on('keydown_SPACE', function (event) {
-            this.nextState();
+            this.nextScene();
         },this);
 
         // background Tile
@@ -265,10 +265,10 @@ var MainMenu = new Phaser.Class({
             font: style.headerFont,
             fill: style.headerText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.titleHeading.setOrigin(0.5, 0.5);
-        //this.titleHeading.setScale(1/zoom);
+        //this.titleHeading.setScale(deviceScale);
         Povin.place(this.titleHeading, 0.5, 0.07);
 
         // Speaker button to start/stop the background music
@@ -296,7 +296,7 @@ var MainMenu = new Phaser.Class({
                 ctx: game.ctx
             }); 
         }); 
-        this.buttonHome.nextState = 'Scores';
+        this.buttonHome.nextScene = 'Scores';
         Povin.place(this.buttonHome, 0.07, 0.055);
 
         // Go Button
@@ -317,7 +317,7 @@ var MainMenu = new Phaser.Class({
              backgroundColor: style.footerTextBackgroundH
          });
 
-         this.buttonGo.on('pointerdown', this.nextState, this);
+         this.buttonGo.on('pointerdown', this.nextScene, this);
          //this.buttonGo.fixedHeight=(Povin.placeY(.1));
          //this.buttonGo.setFixedSize(Povin.placeX(.2),Povin.placeY(.1));
          //this.buttonGo.setOrigin(0.5, 0.5);
@@ -331,7 +331,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyHeading, 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.testTypeHeading.setOrigin(0.5, 0.5);
         Povin.place(this.testTypeHeading, 0.5, 0.25);
@@ -342,7 +342,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyText, 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.testTypeText.setOrigin(0.5, 0.5);
         Povin.place(this.testTypeText, 0.5, 0.30);
@@ -385,7 +385,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyHeading, 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.factorHeading.setOrigin(0.5, 0.5);
         Povin.place(this.factorHeading, 0.5, 0.55);
@@ -395,7 +395,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyText, 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.factorText.setOrigin(0.5, 0.5);
         Povin.place(this.factorText, 0.5, 0.60);
@@ -472,7 +472,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyHeading, 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.levelHeading.setOrigin(0.5, 0.5);
         Povin.place(this.levelHeading, 0.5, 0.40);
         // Level Text
@@ -481,7 +481,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont, 
             fill: style.bodyText, 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.levelText.setOrigin(0.5, 0.5);
         Povin.place(this.levelText, 0.5, 0.45);
@@ -523,7 +523,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyHeading,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.tgHeading.setOrigin(0.5, 0.5);
         Povin.place(this.tgHeading, 0.5, 0.70);
@@ -533,7 +533,7 @@ var MainMenu = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.normScale = this.scaleX;
         this.tgText.setOrigin(0.5, 0.5);
         Povin.place(this.tgText, 0.5, 0.75);
@@ -601,7 +601,7 @@ var MainMenu = new Phaser.Class({
 
         this.anims.create(config);
         this.invader = this.add.sprite(400, 100, 'invader').play('fly');
-        this.invader.setScale(1/zoom);
+        this.invader.setScale(deviceScale);
         this.normScale = this.scaleX;
         this.invader.setOrigin(0.5, 0.5);
         Povin.place(this.invader, .5, .18);
@@ -737,7 +737,7 @@ var MainMenu = new Phaser.Class({
 
     },
 
-    nextState: function () {
+    nextScene: function () {
         option.buzzer = option.timeGoalValues[option.timeGoal] * 1000;
         option.id = option.playerIdArray[option.playuerId] + '.';
         //option.level = option.maxLevel; // x 

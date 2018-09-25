@@ -1,5 +1,5 @@
 /**************************************************************************************
-* Scores State (Povin Speed Math)
+* Scores Scene (Povin Speed Math)
 * @author Doug Park
 * @version v1.0
 * @desc Display Menu Options
@@ -39,7 +39,7 @@ var Scores = new Phaser.Class({
     create: function () {
 
         this.input.keyboard.on('keydown_SPACE', function (event) {
-            game.ctx.nextState();
+            game.ctx.nextScene();
         });
 
          // background Tile
@@ -63,7 +63,7 @@ var Scores = new Phaser.Class({
              font: style.headerFont,
              fill: style.headerText,
              align: 'center'
-         }).setScale(1/zoom);
+         }).setScale(deviceScale);
          this.titleHeading.setOrigin(0.5, 0.5);
          Povin.place(this.titleHeading, 0.5, 0.07);
 
@@ -92,7 +92,7 @@ var Scores = new Phaser.Class({
                  ctx: game.ctx
              });
          });
-         this.buttonHome.nextState = 'MainMenu';
+         this.buttonHome.nextScene = 'MainMenu';
          Povin.place(this.buttonHome, 0.07, 0.055);
 
          // Go Button
@@ -126,7 +126,7 @@ var Scores = new Phaser.Class({
             font: '20px ' + this.myFont,
             fill: '#ad0000',
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.aText.setOrigin(0.5, 0.5);
         Povin.place(this.aText, 0.5, 0.20);
       
@@ -166,7 +166,7 @@ var Scores = new Phaser.Class({
             font: '14px ' + this.myFont,
             fill: '#ebebeb',
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.hText.setOrigin(0, 0);
         Povin.place(this.hText, 0.15, 0.25);
 
@@ -174,7 +174,7 @@ var Scores = new Phaser.Class({
             font: '14px ' + this.myFont,
             fill: '#ebebeb',
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.hyText.setOrigin(0, 0);
         Povin.place(this.hyText, 0.1, 0.28);
 
@@ -182,7 +182,7 @@ var Scores = new Phaser.Class({
             font: '14px ' + this.myFont,
             fill: '#ebebeb',
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.hxText.setOrigin(0, 0);
         Povin.place(this.hxText, 0.15, 0.28);
 
@@ -197,7 +197,7 @@ var Scores = new Phaser.Class({
 
      // button Go
      actionOnClickGo: function (config) {
-        config.ctx.nextState();
+        config.ctx.nextScene();
      },
 
      //
@@ -267,10 +267,13 @@ var Scores = new Phaser.Class({
 
     // draw the chart grid
     displayChart: function() {
+        // clear every time
+        // slow, need to make a sprite or something faster
+        this.chart.clear();
         // place the outline of the chart grid on the screen
         Povin.place(this.chart,.168,.285);
         this.chart.lineStyle(2, 0xebebeb, 1);
-        this.chart.strokeRect(0,0,300*(1/zoom),300*(1/zoom  ));
+        this.chart.strokeRect(0,0,300*deviceScale,300*deviceScale);
 
         // position horiz numbers
         var basehX = Povin.placeX(.185);
@@ -287,25 +290,26 @@ var Scores = new Phaser.Class({
             font: '12px ' + this.myFont, 
             fill: '#ebebeb', 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         // Legend text across the bottom
         var m = this.add.text(Povin.placeX(.5), Povin.placeY(.79),'Met acuracy and speed requirements', { 
             font: '12px ' + this.myFont, 
             fill: '#005300', 
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         m.setOrigin(0.5, 0.5);
         var p = this.add.text(Povin.placeX(.5), Povin.placeY(.81),'Need to keep practicing', { 
             font: '12px ' + this.myFont, 
             fill: '#ad0000', 
             align: 'center'
-            }).setScale(1 / zoom);
+            }).setScale(deviceScale);
         p.setOrigin(0.5, 0.5);
-        this.q = this.add.text(Povin.placeX(.5), Povin.placeY(.83), 'Avg time per problem: ', {
+        this.qString = 'Avg time per problem: ';
+        this.q = this.add.text(Povin.placeX(.5), Povin.placeY(.83), this.qString, {
             font: '12px ' + this.myFont,
             fill: '#ebebeb',
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.q.setOrigin(0.5, 0.5);
 
         // store vertical and horiz numbers in an array so can manage them individually
@@ -320,12 +324,12 @@ var Scores = new Phaser.Class({
                     font: '12px ' + this.myFont,
                     fill: '#ebebeb',
                     align: 'center'
-                }).setScale(1 / zoom)
+                }).setScale(deviceScale)
             }
             this.hText[i].num.text = iCount;
             this.hText[i].num.setOrigin(0.5, 0.5);
             this.hText[i].num.x = basevX;
-            this.hText[i].num.y = basevY + i*(1/zoom);
+            this.hText[i].num.y = basevY + i*deviceScale;
 
             // show the horiz numbers across top of grid        
             this.hText[i + 16] = {
@@ -333,21 +337,21 @@ var Scores = new Phaser.Class({
                     font: '12px ' + this.myFont,
                     fill: '#ebebeb',
                     align: 'center'
-                }).setScale(1 / zoom)
+                }).setScale(deviceScale)
             }
             this.hText[i+16].num.text = iCount;
             this.hText[i+16].num.setOrigin(0.5, 0.5);
-            this.hText[i+16].num.x = basehX + i*(1/zoom);
+            this.hText[i+16].num.x = basehX + i*deviceScale;
             this.hText[i+16].num.y = basehY;
 
             // draw internal lines of grid
-            var j = i*(1/zoom);
+            var j = i*deviceScale;
             this.chart.lineStyle(1, 0xebebeb, .5);
             this.chart.beginPath();
             this.chart.moveTo(0,j);
-            this.chart.lineTo(300*(1/zoom),j);
+            this.chart.lineTo(300*deviceScale,j);
             this.chart.moveTo(j,0);
-            this.chart.lineTo(j,300*(1/zoom));
+            this.chart.lineTo(j,300*deviceScale);
             this.chart.closePath();
             this.chart.strokePath();
             
@@ -368,7 +372,7 @@ var Scores = new Phaser.Class({
 
         this.chart.lineStyle(1, myColor, 1);
         this.chart.fillStyle(myColor,1);
-        this.chart.fillRect(myX*(1/zoom), myY*(1/zoom), 15*(1/zoom), 15*(1/zoom));
+        this.chart.fillRect(myX*deviceScale, myY*deviceScale, 15*deviceScale, 15*deviceScale);
     },
 
 
@@ -410,7 +414,7 @@ var Scores = new Phaser.Class({
 
         // calc avg time for all problems
         totAvg = avg / count;
-        this.q.text += (totAvg/1000).toFixed(4); // update text with avg time
+        this.q.text = this.qString + (totAvg/1000).toFixed(4); // update text with avg time
     },
 
     update: function () {
@@ -427,7 +431,7 @@ var Scores = new Phaser.Class({
 
     },
 
-    nextState: function () {
+    nextScene: function () {
 
         // reset and ready to play again
         Povin.scoreArr = {};

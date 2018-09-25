@@ -30,7 +30,7 @@ var Povin = {
 
     // Action when click on the home button
     actionOnClickHome: function (config) {
-        config.ctx.scene.start(config.target.nextState);
+        config.ctx.scene.start(config.target.nextScene);
     },
 
     onInputDownHome: function (config) {

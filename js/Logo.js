@@ -1,5 +1,5 @@
 /**************************************************************************************
-* Logo State (Povin Speed Math)
+* Logo Scene (Povin Speed Math)
 * @author Doug Park
 * @version v1.0
 * @desc Show logo
@@ -18,22 +18,22 @@ var Logo = new Phaser.Class({
     create: function () {
         this.logo = this.add.sprite(10, 5, "logo").setOrigin(0.5, 0.5);
        
-        this.logo.setScale(0.5 * 1 / zoom);
+        this.logo.setScale(0.5 * deviceScale);
         //this.logo.anchor.setTo(0.5, 0.5);
         Povin.place(this.logo, 0.5, .5)  
     },
 
     update: function () {
-        //this.time.events.add(1000, this.nextState, this);   
+        //this.time.events.add(1000, this.nextScene, this);   
         var timedEvent = this.time.addEvent({
             delay: 1000,
-            callback: this.nextState,
+            callback: this.nextScene,
             callbackScope: this
         });
  
     },
 
-    nextState: function() {
+    nextScene: function() {
         this.scene.start('MainMenu');
     }
 

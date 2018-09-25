@@ -1,5 +1,5 @@
 /**************************************************************************************
-* Boot State
+* Boot Scene
 * @author Doug Park
 * @version v1.0
 * @desc Bootstrap new game
@@ -34,10 +34,12 @@ var zoom = 1 / window.devicePixelRatio; // set zoom
 
 // try to work with desktops and landscape phones
 if (width / height > .7) { // compromize solution
-    width = height * .56;
+    width = height * .5625; // default to 9/16 portrait aspect ratio
     zoom = width/height;
 }
-console.log('width='+width+' height='+height+' zoom='+zoom);
+var deviceScale = 1/zoom;
+
+//console.log('width='+width+' height='+height+' zoom='+zoom);
 
 var game;
 
@@ -117,10 +119,10 @@ var Boot = new Phaser.Class({
     },
 
     preload: function () {
-        // Logo State
+        // Logo Scene
         this.load.image('logo', 'assets/images/povinlogo.png');
 
-        // Povin all States
+        // Povin all Scenes
         this.load.spritesheet('buttonHome', 'assets/buttons/button_home.png', 
             {frameWidth: 53,
              frameHeight: 53
@@ -139,14 +141,14 @@ var Boot = new Phaser.Class({
             frameHeight: 46
         });
 
-        // For all States
+        // For all Scenes
         this.load.image('background', 'assets/images/background.png');
         this.load.spritesheet('title', 'assets/images/PovinMath.png', {
             frameWidth: 400,
             frameHeight: 141
         });
 
-        // Math Game State - Images
+        // Math Game Scene - Images
         this.load.spritesheet('invader', 'assets/images/invader32x32x4.png', {
             frameWidth: 32,
             frameHeight: 32
@@ -160,7 +162,7 @@ var Boot = new Phaser.Class({
             frameHeight: 52
         });
 
-        // Math Game State - Audio
+        // Math Game Scene - Audio
         this.load.audio('perfectSfx', 'assets/audio/SUCCESS_PICKUP_Collect_Chime_01.wav');
         this.load.audio('wrongSfx', 'assets/audio/TECH CHARGER Power Down 05.wav');
         this.load.audio('lateSfx', 'assets/audio/ELECTRIC Power Down 02.wav'); 
@@ -169,11 +171,11 @@ var Boot = new Phaser.Class({
     },
 
     create: function () {
-        //this.addGameStates();
-        this.nextState();
+        //this.addGameScenes();
+        this.nextScene();
     },
 
-    addGameStates: function () {
+    addGameScenes: function () {
         // these states are required before the primary state loader in Preloader
         game.state.add('CheckOrientation', BasicGame.CheckOrientation);
         game.state.add('Logo', BasicGame.Logo);
@@ -182,7 +184,7 @@ var Boot = new Phaser.Class({
         game.state.add('Math', BasicGame.Math);
     },
 
-    nextState: function() {
+    nextScene: function() {
         this.scene.start("CheckOrientation");
     },
 

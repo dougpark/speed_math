@@ -1,5 +1,5 @@
 /**************************************************************************************
-* CheckOrientation State
+* CheckOrientation Scene
 * @author Doug Park
 * @version v1.0
 * @desc On mobile force landscape orientation

@@ -1,5 +1,5 @@
 /**************************************************************************************
-* Math State (Povin Speed Math)
+* Math Scene (Povin Speed Math)
 * @author Doug Park, Povingames.com
 * @email doug@povingames.com
 * @version v1.0
@@ -100,7 +100,7 @@ var PMath = new Phaser.Class({
             font: style.headerFont,
             fill: style.headerText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.titleHeading.setOrigin(0.5, 0.5);
         Povin.place(this.titleHeading, 0.5, 0.07);
 
@@ -129,7 +129,7 @@ var PMath = new Phaser.Class({
                 ctx: game.ctx
             });
         });
-        this.buttonHome.nextState = 'Scores';
+        this.buttonHome.nextScene = 'Scores';
         Povin.place(this.buttonHome, 0.07, 0.055);
 
         // Go Button
@@ -166,12 +166,12 @@ var PMath = new Phaser.Class({
         this.input.on('gameobjectout', this.onObjectOut);
 
         // welcome invader
-        this.invader = this.add.sprite(0, 0, 'invader').play('fly').setScale(1 / zoom);
+        this.invader = this.add.sprite(0, 0, 'invader').play('fly').setScale(deviceScale);
         this.invader.setOrigin(0.5, 0.5);
         Povin.place(this.invader, .5, .18);
    
         // Time invader
-        this.timeInvader = this.add.sprite(0, 0, 'invader').play('fly').setScale(1 / zoom);
+        this.timeInvader = this.add.sprite(0, 0, 'invader').play('fly').setScale(deviceScale);
         this.timeInvader.setOrigin(0.5, 0.5);
         Povin.place(this.timeInvader, .2, .81);
         
@@ -244,7 +244,7 @@ var PMath = new Phaser.Class({
             fill: style.bodyBackground, //'#ebebeb', 
             //backgroundColor: style.bodyText, // new
             align: 'center' 
-        }).setScale(1/zoom);
+        }).setScale(deviceScale);
         this.qText.setOrigin(0.5,0.5);
         Povin.place(this.qText, 0.5, 0.47);
 
@@ -255,7 +255,7 @@ var PMath = new Phaser.Class({
             fill: style.bodyText, //'#ebebeb',
             //backgroundColor: style.bodyText, // new
             align: 'center'
-            }).setScale(1 / zoom);
+            }).setScale(deviceScale);
         this.sText.setOrigin(0.5, 0.5);
         Povin.place(this.sText, 0.5, 0.37);
 
@@ -266,7 +266,7 @@ var PMath = new Phaser.Class({
             fill: style.bodyText, //'#ebebeb', 
             //backgroundColor: style.bodyText, // new
             align: 'center' 
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.qRText.setOrigin(0.5, 0.5);
         Povin.place(this.qRText, 0.5, 0.760);
 
@@ -277,7 +277,7 @@ var PMath = new Phaser.Class({
             fill: style.bodyBackground, //'#ebebeb', 
             backgroundColor: style.bodyHeading, //'#ad0000', // new
             align: 'center'
-            }).setScale(1 / zoom);
+            }).setScale(deviceScale);
         this.qWText.setOrigin(0.5, 0.5);
         Povin.place(this.qWText, 0.5, 0.760);
 
@@ -287,7 +287,7 @@ var PMath = new Phaser.Class({
                     font: style.bodyFont,
                     fill: style.bodyText,
                     align: 'center'
-                }).setScale(1 / zoom);
+                }).setScale(deviceScale);
         this.a1Text.setOrigin(0.5, 0.5);
         Povin.place(this.a1Text, 0.3, 0.6);
 
@@ -297,7 +297,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.a2Text.setOrigin(0.5, 0.5);
         Povin.place(this.a2Text, 0.5, 0.6);
 
@@ -307,7 +307,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.a3Text.setOrigin(0.5, 0.5);
         Povin.place(this.a3Text, 0.7, 0.6);
 
@@ -317,7 +317,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyHeading,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.cText.setOrigin(0.5, 0.5);
         Povin.place(this.cText, 0.2, 0.24);
         // Level Text
@@ -326,7 +326,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.c2Text.setOrigin(0.5, 0.5);
         Povin.place(this.c2Text, 0.2, 0.3);
 
@@ -336,7 +336,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyHeading,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.rText.setOrigin(0.5, 0.5);
         Povin.place(this.rText, 0.8, 0.24);
         // Right Count Text
@@ -345,7 +345,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.r2Text.setOrigin(0.5, 0.5);
         Povin.place(this.r2Text, 0.8, 0.3);
 
@@ -355,7 +355,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyHeading,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.tHText.setOrigin(0.5, 0.5);
         Povin.place(this.tHText, 0.5, 0.24);
         // Timer Text
@@ -364,7 +364,7 @@ var PMath = new Phaser.Class({
             font: style.bodyFont,
             fill: style.bodyText,
             align: 'center'
-        }).setScale(1 / zoom);
+        }).setScale(deviceScale);
         this.timerText.setOrigin(0.5, 0.5);
         Povin.place(this.timerText, 0.5, 0.3);
 
@@ -845,7 +845,7 @@ var PMath = new Phaser.Class({
         
         if (config.ctx.buttonGo.inputEnabled) {
             if (config.ctx.roundComplete) {
-                config.ctx.nextState();
+                config.ctx.nextScene();
             }
 
             // not complete so go again
@@ -854,7 +854,7 @@ var PMath = new Phaser.Class({
 
     },
     
-    nextState: function() {
+    nextScene: function() {
         this.scene.start('Scores', true, false); // go to Scores
     },
   
