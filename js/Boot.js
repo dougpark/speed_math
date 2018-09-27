@@ -9,20 +9,20 @@
 /*
     iphone device resolutions                                     
                                                     device
-                                         landscape  pixel
-    device          points      ratio    ratio      ratio   pixels      ppi
+                                         landscape  pixel               touch
+    device          points      ratio    ratio      ratio   pixels      target       ppi
 
-    Xs Max          414x896     0.4621   2.1643     x3 =    1242x2688   458
-    Xr              414x896     0.4621   2.1643     x2 =    828x1792    326
-    X,Xs            375x812     0.4618   2.1653     x3 =    1125x2436   458
-    8+              414x736     0.5625   1.7778     x3 =    1242x2208   401
-    8               375x667     0.5622   1.7787     x2 =    750x1334    326
-    5,SE            320x568     0.5634   1.775      x2 =    640x1136    326
+    Xs Max          414x896     0.4621   2.1643     x3 =    1242x2688    132x132    458
+    Xr              414x896     0.4621   2.1643     x2 =    828x1792     88x88      326
+    X,Xs            375x812     0.4618   2.1653     x3 =    1125x2436    132x132    458
+    8+              414x736     0.5625   1.7778     x3 =    1242x2208    132x132    401
+    8               375x667     0.5622   1.7787     x2 =    750x1334     88x88      326
+    5,SE            320x568     0.5634   1.775      x2 =    640x1136     88x88      326
 
-    ipad mini       768x1024    0.75     1.3333     x2 =    1536x2048   326 
+    ipad mini       768x1024    0.75     1.3333     x2 =    1536x2048    88x88      326 
     ipad                        0.75                        1536x2048
-    ipad pro 10.5               0.75                        1668x2224   264
-    ipad pro 12.9               0.75                        2048x2732   264
+    ipad pro 10.5               0.75                        1668x2224               264
+    ipad pro 12.9               0.75                        2048x2732               264
 
     source: https: //www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
 
@@ -171,7 +171,6 @@ var Boot = new Phaser.Class({
     },
 
     create: function () {
-        
         this.nextScene();
     },
 
